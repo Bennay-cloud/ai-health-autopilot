@@ -15,7 +15,11 @@ import decision_record_service as drs
 import anti_ghosting_service as ags
 import outcome_tracking_service as ots
 import personal_learning_engine as ple
-from db import decision_records_collection, outcome_records_collection
+import preference_engine as prefe
+from db import (
+    decision_records_collection, outcome_records_collection,
+    user_feedback_collection, user_preferences_collection,
+)
 from occupation_engine import list_professions
 from pain_engine import list_pain_areas
 import os
@@ -215,7 +219,27 @@ async def formdata(profile: UserProfile, current_user: dict = Depends(get_curren
 
 @app.post("/api/health-autopilot/daily-decision")
 def daily_decision(request: DailyDecisionRequest):
-    response = generate_daily_decision(request)
+    # Pre-fetch preference profile for preference-aware workout selection
+    effective_user_id_pre = request.user_id or request.user_profile.name
+    pref_preferred: Optional[list] = None
+    pref_disliked:  Optional[list] = None
+    try:
+        pre_records  = drs.get_user_history(decision_records_collection, effective_user_id_pre)
+        pre_wo_fb    = prefe.get_workout_feedbacks(user_feedback_collection, effective_user_id_pre)
+        pre_meal_fb  = prefe.get_meal_feedbacks(user_feedback_collection, effective_user_id_pre)
+        pre_profile  = prefe.compute_preference_profile(
+            effective_user_id_pre, pre_records, pre_wo_fb, pre_meal_fb
+        )
+        pref_preferred = pre_profile.preferred_workout_types or None
+        pref_disliked  = pre_profile.disliked_workout_types  or None
+    except Exception as e:
+        print(f"Preference pre-fetch failed (non-critical): {e}")
+
+    response = generate_daily_decision(
+        request,
+        user_preferred_workout_types=pref_preferred,
+        user_disliked_workout_types=pref_disliked,
+    )
 
     # Auto-create a DecisionRecord capturing context + decision
     record_id: Optional[str] = None
@@ -289,6 +313,24 @@ def daily_decision(request: DailyDecisionRequest):
             response.personalization_note = note
     except Exception as e:
         print(f"Personal learning note failed (non-critical): {e}")
+
+    # Preference engine: attach preference note
+    try:
+        wo_feedbacks   = prefe.get_workout_feedbacks(user_feedback_collection, effective_user_id)
+        meal_feedbacks = prefe.get_meal_feedbacks(user_feedback_collection, effective_user_id)
+        pref_profile   = prefe.compute_preference_profile(
+            effective_user_id,
+            drs.get_user_history(decision_records_collection, effective_user_id),
+            wo_feedbacks,
+            meal_feedbacks,
+        )
+        response.preference_note = prefe.build_preference_note(
+            pref_profile,
+            response.selected_workout.workout_type,
+            response.workout_duration_breakdown.total_minutes,
+        )
+    except Exception as e:
+        print(f"Preference note failed (non-critical): {e}")
 
     result = response.model_dump()
     result["record_id"] = record_id
@@ -376,6 +418,119 @@ def user_adaptive_recommendation(
         return ags.generate_adaptive_recommendation(
             records, adherence, current_duration, current_intensity
         ).model_dump()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ── Preference Engine Request Models ──────────────────────────────
+
+class WorkoutFeedbackInput(BaseModel):
+    user_id: str
+    workout_type: str
+    score: int = Field(..., ge=-1, le=1)
+    reason: Optional[str] = None
+    coaching_style: Optional[str] = None
+    date: Optional[str] = None
+
+
+class MealFeedbackInput(BaseModel):
+    user_id: str
+    meal_id: str
+    meal_name: Optional[str] = None
+    provider: Optional[str] = None
+    category: Optional[str] = None
+    score: int = Field(..., ge=-1, le=1)
+    reason: Optional[str] = None
+    date: Optional[str] = None
+
+
+# ── Preference Engine Endpoints ────────────────────────────────────
+
+@app.get("/api/users/{user_id}/preferences")
+def user_preferences(user_id: str):
+    try:
+        records       = drs.get_user_history(decision_records_collection, user_id)
+        wo_feedbacks  = prefe.get_workout_feedbacks(user_feedback_collection, user_id)
+        meal_feedbacks = prefe.get_meal_feedbacks(user_feedback_collection, user_id)
+        profile       = prefe.compute_preference_profile(user_id, records, wo_feedbacks, meal_feedbacks)
+        return profile.model_dump()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/users/{user_id}/preference-insights")
+def user_preference_insights(user_id: str):
+    try:
+        records        = drs.get_user_history(decision_records_collection, user_id)
+        wo_feedbacks   = prefe.get_workout_feedbacks(user_feedback_collection, user_id)
+        meal_feedbacks = prefe.get_meal_feedbacks(user_feedback_collection, user_id)
+        profile        = prefe.compute_preference_profile(user_id, records, wo_feedbacks, meal_feedbacks)
+        return {
+            "confidence_level": profile.confidence_level,
+            "total_decisions_analyzed": profile.total_decisions_analyzed,
+            "preferred_workout_types": profile.preferred_workout_types,
+            "disliked_workout_types": profile.disliked_workout_types,
+            "preferred_workout_time": profile.preferred_workout_time,
+            "preferred_duration_bucket": profile.preferred_duration_bucket,
+            "preferred_delivery_location": profile.preferred_delivery_location,
+            "preferred_meal_categories": profile.preferred_meal_categories,
+            "preferred_coaching_style": profile.preferred_coaching_style,
+            "preference_insights": profile.preference_insights,
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/users/{user_id}/feedback/workout")
+def workout_feedback(user_id: str, inp: WorkoutFeedbackInput):
+    if inp.score not in (-1, 1):
+        raise HTTPException(status_code=400, detail="score must be 1 (positive) or -1 (negative).")
+    feedback = prefe.WorkoutFeedback(
+        user_id=user_id,
+        workout_type=inp.workout_type,
+        score=inp.score,
+        reason=inp.reason,
+        coaching_style=inp.coaching_style,
+        date=inp.date or datetime.now(timezone.utc).date().isoformat(),
+    )
+    fid = prefe.save_workout_feedback(user_feedback_collection, feedback)
+    return {"feedback_id": fid, "status": "recorded"}
+
+
+@app.post("/api/users/{user_id}/feedback/meal")
+def meal_feedback(user_id: str, inp: MealFeedbackInput):
+    if inp.score not in (-1, 1):
+        raise HTTPException(status_code=400, detail="score must be 1 (positive) or -1 (negative).")
+    feedback = prefe.MealFeedback(
+        user_id=user_id,
+        meal_id=inp.meal_id,
+        meal_name=inp.meal_name,
+        provider=inp.provider,
+        category=inp.category,
+        score=inp.score,
+        reason=inp.reason,
+        date=inp.date or datetime.now(timezone.utc).date().isoformat(),
+    )
+    fid = prefe.save_meal_feedback(user_feedback_collection, feedback)
+    return {"feedback_id": fid, "status": "recorded"}
+
+
+@app.post("/api/users/{user_id}/preferences/recompute")
+def preferences_recompute(user_id: str):
+    """Forces a fresh recomputation of the preference profile for this user."""
+    try:
+        records        = drs.get_user_history(decision_records_collection, user_id)
+        wo_feedbacks   = prefe.get_workout_feedbacks(user_feedback_collection, user_id)
+        meal_feedbacks = prefe.get_meal_feedbacks(user_feedback_collection, user_id)
+        profile        = prefe.compute_preference_profile(user_id, records, wo_feedbacks, meal_feedbacks)
+        return {
+            "status": "recomputed",
+            "user_id": user_id,
+            "confidence_level": profile.confidence_level,
+            "preferred_workout_types": profile.preferred_workout_types,
+            "disliked_workout_types": profile.disliked_workout_types,
+            "generated_at": profile.generated_at,
+        }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

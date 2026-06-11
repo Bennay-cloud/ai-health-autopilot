@@ -159,6 +159,8 @@ class DailyDecisionResponse(BaseModel):
     occupational_health_risk_score: Optional[dict] = None
     # ── Personal Learning ──────────────
     personalization_note: Optional[str] = None
+    # ── Preference Engine ──────────────
+    preference_note: Optional[str] = None
 
 
 # ── Cycle Phase Workout Preferences ──────────────────────────────
@@ -255,6 +257,7 @@ def select_workout(
     level: str,
     preferred_types: list[str],
     available_minutes: Optional[int],
+    disliked_types: Optional[list[str]] = None,
 ) -> dict:
     workouts = _load_workouts()
 
@@ -271,6 +274,13 @@ def select_workout(
 
     if not candidates:
         candidates = workouts
+
+    # Filter out disliked types — only when non-disliked alternatives exist
+    if disliked_types:
+        non_disliked = [w for w in candidates if w.get("workout_type") not in disliked_types]
+        if non_disliked:
+            candidates = non_disliked
+        # else: all candidates are disliked — fall through to standard selection (safety > preference)
 
     for wtype in preferred_types:
         for w in candidates:
@@ -310,7 +320,11 @@ DELIVERY_MESSAGES = {
 
 # ── Main Service Function ─────────────────────────────────────────
 
-def generate_daily_decision(request: DailyDecisionRequest) -> DailyDecisionResponse:
+def generate_daily_decision(
+    request: DailyDecisionRequest,
+    user_preferred_workout_types: Optional[List[str]] = None,
+    user_disliked_workout_types: Optional[List[str]] = None,
+) -> DailyDecisionResponse:
     # 1. Detect cycle phase (needed to feed into context engine)
     cycle_profile = request.user_profile.cycle_profile or CycleProfile()
     from datetime import date as _date
@@ -347,12 +361,19 @@ def generate_daily_decision(request: DailyDecisionRequest) -> DailyDecisionRespo
     # 5. Coaching message
     coaching_message = generate_coaching_message(effective_day_type, cycle_result.phase)
 
-    # 6. Workout selection
+    # 6. Workout selection — merge cycle preferences with user preference boosts
+    # Preference-preferred types are prepended so they are tried first,
+    # but cycle-phase types still participate in the fallback chain.
+    # Safety constraint: day_type (recovery/normal/performance) is NEVER overridden.
+    merged_preferred = list(user_preferred_workout_types or []) + [
+        t for t in preferred_types if t not in (user_preferred_workout_types or [])
+    ]
     workout_data = select_workout(
         effective_day_type,
         request.user_profile.level,
-        preferred_types,
+        merged_preferred,
         request.daily_context.available_training_window_minutes,
+        disliked_types=user_disliked_workout_types,
     )
 
     # 7. Meal selection (via shared catalog service)
@@ -498,4 +519,5 @@ def generate_daily_decision(request: DailyDecisionRequest) -> DailyDecisionRespo
         health_advisor_message=advisor_message_out,
         occupational_health_risk_score=risk_score_out,
         personalization_note=None,  # populated by main.py after learning profile lookup
+        preference_note=None,       # populated by main.py after preference profile lookup
     )

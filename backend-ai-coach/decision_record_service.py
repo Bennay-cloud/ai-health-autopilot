@@ -249,6 +249,20 @@ def export_training_dataset(collection: Any, outcomes_collection: Any = None) ->
     for doc in docs:
         user_docs[doc.get("user_id", "unknown")].append(doc)
 
+    def _pref_best_type(type_map: dict) -> Optional[str]:
+        """Running best workout type by avg completion rate (no data leakage)."""
+        eligible = {t: v for t, v in type_map.items() if len(v) >= 2}
+        if not eligible:
+            return None
+        return max(eligible, key=lambda t: sum(eligible[t]) / len(eligible[t]))
+
+    def _pref_best_location(loc_map: dict) -> Optional[str]:
+        """Running best delivery location by avg meal adherence score."""
+        eligible = {l: v for l, v in loc_map.items() if len(v) >= 2}
+        if not eligible:
+            return None
+        return max(eligible, key=lambda l: sum(eligible[l]) / len(eligible[l]))
+
     def _duration_bucket_label(minutes: int) -> str:
         if minutes <= 15:  return "0-15 min"
         if minutes <= 30:  return "16-30 min"
@@ -281,6 +295,9 @@ def export_training_dataset(collection: Any, outcomes_collection: Any = None) ->
         travel_pcts: List[float] = []
         running_meal_scores: List[float] = []
         running_sleep_scores: List[float] = []
+        # Preference running state (reset per user)
+        type_completion_map: dict = {}
+        loc_meal_map: dict = {}
 
         for doc in user_records:
             ctx = doc.get("context", {})
@@ -402,6 +419,20 @@ def export_training_dataset(collection: Any, outcomes_collection: Any = None) ->
                 "high" if n >= 30 else "medium" if n >= 7 else "low"
             )
 
+            # --- Preference running state update ---
+            wo_type = dec.get("workout_type") or ""
+            if wo_type:
+                type_completion_map.setdefault(wo_type, []).append(
+                    out.get("workout_completion_percentage") or 0.0
+                )
+            loc_key = dec.get("delivery_location") or ""
+            if loc_key:
+                loc_meal_score = (
+                    100.0 if (out.get("meal_ordered") and out.get("meal_confirmed"))
+                    else 50.0 if out.get("meal_ordered") else 0.0
+                )
+                loc_meal_map.setdefault(loc_key, []).append(loc_meal_score)
+
             rows.append({
                 # --- Context features ---
                 "sleep_hours": ctx.get("sleep_hours"),
@@ -444,7 +475,7 @@ def export_training_dataset(collection: Any, outcomes_collection: Any = None) ->
                 "energy_next_day": next_daily.get("energy") if next_daily else None,
                 "stress_next_day": next_daily.get("stress") if next_daily else None,
                 "outcome_trend_score": outcome_trend_score,
-                # --- Personal learning features (Step 14) ---
+                # --- Personal learning features ---
                 "best_workout_duration_bucket": best_dur_bucket,
                 "best_workout_time": best_workout_time,
                 "stress_adherence_rate": stress_adherence_rate,
@@ -452,5 +483,9 @@ def export_training_dataset(collection: Any, outcomes_collection: Any = None) ->
                 "meal_adherence_rate": meal_adherence_rate,
                 "sleep_adherence_rate": sleep_adherence_rate,
                 "personal_learning_confidence": personal_learning_confidence,
+                # --- Preference features ---
+                "preferred_workout_type": _pref_best_type(type_completion_map),
+                "preferred_delivery_location": _pref_best_location(loc_meal_map),
+                "preference_confidence": personal_learning_confidence,
             })
     return rows
