@@ -273,6 +273,111 @@ function PainAreaSelector({ selectedAreas, onChange }) {
   );
 }
 
+// ── PersonalLearningPanel ─────────────────────────────────────────
+
+const CONFIDENCE_CONFIG = {
+  high:   { label: 'High Confidence', color: '#10b981', bg: '#ecfdf5', icon: '●●●' },
+  medium: { label: 'Medium Confidence', color: '#f59e0b', bg: '#fffbeb', icon: '●●○' },
+  low:    { label: 'Building Data', color: '#94a3b8', bg: '#f8fafc', icon: '●○○' },
+};
+
+const PATTERN_ICONS = {
+  duration:               '⏱',
+  time_of_day:            '🕐',
+  stress_response:        '⚡',
+  travel_response:        '✈️',
+  meal_adherence:         '🍽',
+  sleep_response:         '💤',
+  recovery_effectiveness: '🔄',
+};
+
+function PersonalLearningPanel({ learningData }) {
+  const [expanded, setExpanded] = React.useState(null);
+
+  if (!learningData) return null;
+
+  const { confidence_level, total_days_analyzed, learned_patterns, has_sufficient_data } = learningData;
+  const conf = CONFIDENCE_CONFIG[confidence_level] || CONFIDENCE_CONFIG.low;
+
+  if (!has_sufficient_data) {
+    return (
+      <div className="plp-card plp-empty">
+        <div className="plp-header">
+          <span className="plp-brain-icon">🧠</span>
+          <div>
+            <div className="plp-title">What the AI Learned About You</div>
+            <div className="plp-subtitle">Personal behavior analysis</div>
+          </div>
+          <div className="plp-conf-badge" style={{ background: conf.bg, color: conf.color }}>
+            {conf.icon} {conf.label}
+          </div>
+        </div>
+        <div className="plp-empty-state">
+          The AI needs more data before it can learn your personal patterns.
+          Complete <strong>{Math.max(0, 7 - total_days_analyzed)}</strong> more days to unlock your first insights.
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="plp-card">
+      <div className="plp-header">
+        <span className="plp-brain-icon">🧠</span>
+        <div>
+          <div className="plp-title">What the AI Learned About You</div>
+          <div className="plp-subtitle">{total_days_analyzed} days analyzed</div>
+        </div>
+        <div className="plp-conf-badge" style={{ background: conf.bg, color: conf.color }}>
+          {conf.icon} {conf.label}
+        </div>
+      </div>
+
+      {learned_patterns.length === 0 ? (
+        <div className="plp-empty-state">
+          Not enough behavioral variance detected yet. Keep logging your days.
+        </div>
+      ) : (
+        <div className="plp-patterns">
+          {learned_patterns.map((p, i) => (
+            <div
+              key={i}
+              className={`plp-pattern ${expanded === i ? 'plp-pattern-open' : ''}`}
+              onClick={() => setExpanded(expanded === i ? null : i)}
+            >
+              <div className="plp-pattern-header">
+                <span className="plp-pattern-icon">{PATTERN_ICONS[p.pattern_type] || '📊'}</span>
+                <span className="plp-pattern-insight">{p.insight}</span>
+                <div className="plp-pattern-right">
+                  <div className="plp-conf-bar">
+                    <div
+                      className="plp-conf-fill"
+                      style={{ width: `${p.confidence_score * 100}%`, background: conf.color }}
+                    />
+                  </div>
+                  <span className="plp-chevron">{expanded === i ? '▲' : '▼'}</span>
+                </div>
+              </div>
+              {expanded === i && (
+                <div className="plp-pattern-body">
+                  <div className="plp-evidence">
+                    <span className="plp-evidence-label">Evidence</span>
+                    <span>{p.evidence}</span>
+                  </div>
+                  <div className="plp-action">
+                    <span className="plp-action-label">Recommended action</span>
+                    <span>{p.recommended_action}</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── HealthAdvisorPanel ────────────────────────────────────────────
 
 function HealthAdvisorPanel({ message, profession }) {
@@ -2297,6 +2402,7 @@ export default function App() {
   const [orderConfirmation,  setOrderConfirmation] = useState(null);
   const [orderLoading,       setOrderLoading]      = useState(false);
   const [adherenceData,      setAdherenceData]     = useState(null);
+  const [learningData,       setLearningData]      = useState(null);
   const [progressData,       setProgressData]      = useState(null);
 
   // ── Auth ───────────────────────────────────────────────────────
@@ -2327,6 +2433,10 @@ export default function App() {
     fetch(`${API}/api/users/${encodeURIComponent(userId)}/dashboard`)
       .then(r => r.ok ? r.json() : null)
       .then(d => { if (d) setAdherenceData(d); })
+      .catch(() => {});
+    fetch(`${API}/api/users/${encodeURIComponent(userId)}/learning-insights`)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d) setLearningData(d); })
       .catch(() => {});
   };
 
@@ -2443,7 +2553,7 @@ export default function App() {
 
   const handleRestart = () => {
     setStep(1); setResults(null); setSelectedSkus(new Set());
-    setAdherenceData(null); setProgressData(null);
+    setAdherenceData(null); setProgressData(null); setLearningData(null);
     setOrderConfirmation(null); setCalendarEvents([]); setPainAreas([]);
   };
 
@@ -2716,6 +2826,14 @@ export default function App() {
                   </button>
                 </div>
 
+                {/* Personalization note from learning engine */}
+                {dr && dr.personalization_note && (
+                  <div className="personalization-note">
+                    <span className="pn-icon">🧠</span>
+                    <span>{dr.personalization_note}</span>
+                  </div>
+                )}
+
                 {/* ══ OCCUPATIONAL HEALTH ADVISOR ══ */}
                 {dr && dr.health_advisor_message && (
                   <HealthAdvisorPanel
@@ -2760,6 +2878,9 @@ export default function App() {
                       <AIMemoryPanel adherenceData={adherenceData} />
                       <AIEvolutionTimeline adherenceData={adherenceData} />
                     </div>
+
+                    {/* Personal Learning Panel */}
+                    <PersonalLearningPanel learningData={learningData} />
 
                     {/* Cycle phase */}
                     {cyclePhase && cyclePhase !== 'unknown' && (

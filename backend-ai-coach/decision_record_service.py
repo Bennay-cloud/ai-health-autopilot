@@ -249,12 +249,38 @@ def export_training_dataset(collection: Any, outcomes_collection: Any = None) ->
     for doc in docs:
         user_docs[doc.get("user_id", "unknown")].append(doc)
 
+    def _duration_bucket_label(minutes: int) -> str:
+        if minutes <= 15:  return "0-15 min"
+        if minutes <= 30:  return "16-30 min"
+        if minutes <= 45:  return "31-45 min"
+        if minutes <= 60:  return "46-60 min"
+        return "60+ min"
+
+    def _time_cat(workout_time: str) -> str:
+        wt = (workout_time or "").lower().strip()
+        if wt in ("morning", "afternoon", "evening"):
+            return wt
+        try:
+            hour = int(wt.replace(".", ":").split(":")[0])
+            if 5 <= hour < 12:   return "morning"
+            if 12 <= hour < 17:  return "afternoon"
+            return "evening"
+        except (ValueError, IndexError):
+            return "unknown"
+
     rows = []
     for user_id_key, user_records in user_docs.items():
         user_records.sort(key=lambda d: d.get("date", ""))
         running_pcts: List[float] = []
         running_outcome_composites: List[float] = []
         user_outcomes = outcomes_lookup.get(user_id_key, {})
+        # Personal learning running state (reset per user)
+        bucket_data_map: dict = {}
+        time_data_map: dict = {}
+        stress_pcts: List[float] = []
+        travel_pcts: List[float] = []
+        running_meal_scores: List[float] = []
+        running_sleep_scores: List[float] = []
 
         for doc in user_records:
             ctx = doc.get("context", {})
@@ -318,6 +344,64 @@ def export_training_dataset(collection: Any, outcomes_collection: Any = None) ->
                 if running_outcome_composites else None
             )
 
+            # --- Personal Learning features (running per-user, no data leakage) ---
+            # Duration bucket adherence: track best bucket by running avg completion
+            wo_dur = dec.get("workout_duration_recommended") or 0
+            dur_bucket = _duration_bucket_label(wo_dur)
+            bucket_data_map.setdefault(dur_bucket, []).append(
+                out.get("workout_completion_percentage") or 0.0
+            )
+            best_dur_bucket = max(
+                bucket_data_map,
+                key=lambda b: sum(bucket_data_map[b]) / len(bucket_data_map[b])
+                if bucket_data_map[b] else 0,
+            )
+
+            # Time-of-day adherence: track completion by time category
+            wt_cat = _time_cat(dec.get("workout_time") or "")
+            time_data_map.setdefault(wt_cat, []).append(
+                bool(out.get("completed_workout"))
+            )
+            best_workout_time = max(
+                (t for t in time_data_map if t != "unknown"),
+                key=lambda t: sum(time_data_map[t]) / len(time_data_map[t])
+                if time_data_map.get(t) else 0,
+                default=wt_cat,
+            )
+
+            # Stress adherence rate: running avg completion on high-stress days
+            sl = ctx.get("stress_level") or 0
+            stress_pcts.append(out.get("workout_completion_percentage") or 0.0) if sl >= 7 else None
+            stress_adherence_rate = (
+                round(sum(stress_pcts) / len(stress_pcts), 1) if stress_pcts else None
+            )
+
+            # Travel adherence rate
+            if ctx.get("travel"):
+                travel_pcts.append(out.get("overall_completion_percentage") or 0.0)
+            travel_adherence_rate = (
+                round(sum(travel_pcts) / len(travel_pcts), 1) if travel_pcts else None
+            )
+
+            # Meal adherence rate (running)
+            meal_score = (
+                100.0 if (out.get("meal_ordered") and out.get("meal_confirmed"))
+                else 50.0 if out.get("meal_ordered") else 0.0
+            )
+            running_meal_scores.append(meal_score)
+            meal_adherence_rate = round(sum(running_meal_scores) / len(running_meal_scores), 1)
+
+            # Sleep adherence rate (running)
+            sleep_score = 100.0 if out.get("sleep_target_achieved") else 0.0
+            running_sleep_scores.append(sleep_score)
+            sleep_adherence_rate = round(sum(running_sleep_scores) / len(running_sleep_scores), 1)
+
+            # Personal learning confidence tier
+            n = len(running_pcts)
+            personal_learning_confidence = (
+                "high" if n >= 30 else "medium" if n >= 7 else "low"
+            )
+
             rows.append({
                 # --- Context features ---
                 "sleep_hours": ctx.get("sleep_hours"),
@@ -360,5 +444,13 @@ def export_training_dataset(collection: Any, outcomes_collection: Any = None) ->
                 "energy_next_day": next_daily.get("energy") if next_daily else None,
                 "stress_next_day": next_daily.get("stress") if next_daily else None,
                 "outcome_trend_score": outcome_trend_score,
+                # --- Personal learning features (Step 14) ---
+                "best_workout_duration_bucket": best_dur_bucket,
+                "best_workout_time": best_workout_time,
+                "stress_adherence_rate": stress_adherence_rate,
+                "travel_adherence_rate": travel_adherence_rate,
+                "meal_adherence_rate": meal_adherence_rate,
+                "sleep_adherence_rate": sleep_adherence_rate,
+                "personal_learning_confidence": personal_learning_confidence,
             })
     return rows
