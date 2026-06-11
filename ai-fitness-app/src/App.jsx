@@ -378,6 +378,133 @@ function PersonalLearningPanel({ learningData }) {
   );
 }
 
+// ── PreferenceInsightsPanel ───────────────────────────────────────
+
+function PreferenceInsightsPanel({ preferenceData }) {
+  if (!preferenceData) return null;
+
+  const {
+    confidence_level,
+    total_decisions_analyzed,
+    preferred_workout_types = [],
+    disliked_workout_types  = [],
+    preferred_workout_time,
+    preferred_duration_bucket,
+    preferred_delivery_location,
+    preferred_meal_categories = [],
+    preferred_coaching_style,
+    preference_insights = [],
+    recommendation_boosts = [],
+  } = preferenceData;
+
+  const conf = CONFIDENCE_CONFIG[confidence_level] || CONFIDENCE_CONFIG.low;
+  const hasData = total_decisions_analyzed >= 7;
+
+  if (!hasData) {
+    return (
+      <div className="pip-card pip-empty">
+        <div className="pip-header">
+          <span className="pip-icon">❤️</span>
+          <div>
+            <div className="pip-title">What the AI Knows You Like</div>
+            <div className="pip-subtitle">Preference learning</div>
+          </div>
+          <div className="plp-conf-badge" style={{ background: conf.bg, color: conf.color }}>
+            {conf.icon} {conf.label}
+          </div>
+        </div>
+        <div className="plp-empty-state">
+          Complete <strong>{Math.max(0, 7 - total_decisions_analyzed)}</strong> more days to unlock preference insights.
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="pip-card">
+      <div className="pip-header">
+        <span className="pip-icon">❤️</span>
+        <div>
+          <div className="pip-title">What the AI Knows You Like</div>
+          <div className="pip-subtitle">{total_decisions_analyzed} decisions analyzed</div>
+        </div>
+        <div className="plp-conf-badge" style={{ background: conf.bg, color: conf.color }}>
+          {conf.icon} {conf.label}
+        </div>
+      </div>
+
+      <div className="pip-sections">
+        {/* Workout Preferences */}
+        {(preferred_workout_types.length > 0 || disliked_workout_types.length > 0) && (
+          <div className="pip-section">
+            <div className="pip-section-label">Workout Preferences</div>
+            <div className="pip-tags-row">
+              {preferred_workout_types.map(t => (
+                <span key={t} className="pip-tag pip-tag-liked">{t.replace(/_/g,' ')}</span>
+              ))}
+              {disliked_workout_types.map(t => (
+                <span key={t} className="pip-tag pip-tag-disliked">{t.replace(/_/g,' ')}</span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Schedule Preferences */}
+        {(preferred_workout_time || preferred_duration_bucket) && (
+          <div className="pip-section">
+            <div className="pip-section-label">Schedule Preferences</div>
+            <div className="pip-chips-row">
+              {preferred_workout_time && (
+                <span className="pip-chip">🕐 {preferred_workout_time}</span>
+              )}
+              {preferred_duration_bucket && (
+                <span className="pip-chip">⏱ {preferred_duration_bucket}</span>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Meal Preferences */}
+        {(preferred_delivery_location || preferred_meal_categories.length > 0) && (
+          <div className="pip-section">
+            <div className="pip-section-label">Meal Preferences</div>
+            <div className="pip-chips-row">
+              {preferred_delivery_location && (
+                <span className="pip-chip">📦 {preferred_delivery_location} delivery</span>
+              )}
+              {preferred_meal_categories.slice(0, 3).map(c => (
+                <span key={c} className="pip-chip">🍽 {c}</span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Coaching Style */}
+        {preferred_coaching_style && (
+          <div className="pip-section">
+            <div className="pip-section-label">Coaching Preferences</div>
+            <div className="pip-chips-row">
+              <span className="pip-chip">💬 {preferred_coaching_style} coaching</span>
+            </div>
+          </div>
+        )}
+
+        {/* Insights */}
+        {preference_insights.length > 0 && (
+          <div className="pip-section">
+            <div className="pip-section-label">Key Insights</div>
+            <ul className="pip-insights-list">
+              {preference_insights.slice(0, 4).map((ins, i) => (
+                <li key={i} className="pip-insight-item">{ins}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ── HealthAdvisorPanel ────────────────────────────────────────────
 
 function HealthAdvisorPanel({ message, profession }) {
@@ -1486,14 +1613,48 @@ function AIEvolutionTimeline({ adherenceData }) {
 }
 
 const FEEDBACK_REASONS = {
-  workout: ['Too difficult', 'Too easy', 'No time', 'Wrong type', 'Stress misread', 'Other'],
-  meal:    ['Wrong cuisine', 'Too expensive', 'Dietary issue', 'Portion size', 'Bad timing', 'Other'],
+  workout: [
+    { label: 'Too difficult', code: 'too_hard'   },
+    { label: 'Too easy',      code: 'too_easy'   },
+    { label: 'No time',       code: 'no_time'    },
+    { label: 'Boring',        code: 'boring'     },
+    { label: 'Enjoyed it',    code: 'enjoyed_it' },
+  ],
+  meal: [
+    { label: 'Tasty',        code: 'tasty'           },
+    { label: 'Too expensive', code: 'expensive'       },
+    { label: 'Wrong cuisine', code: 'wrong_cuisine'   },
+    { label: 'Too much',      code: 'too_much_food'   },
+    { label: 'Too little',    code: 'too_little_food' },
+  ],
 };
 
-function AIFeedback({ type }) {
+function AIFeedback({ type, userId, workoutType, mealId, mealName, mealProvider, mealCategory, date }) {
   const [rating,    setRating]    = useState(null);
   const [reason,    setReason]    = useState('');
   const [submitted, setSubmitted] = useState(false);
+
+  const sendFeedback = (score, reasonCode) => {
+    if (!userId) return;
+    const today = date || new Date().toISOString().slice(0, 10);
+    if (type === 'workout' && workoutType) {
+      fetch(`${API}/api/users/${encodeURIComponent(userId)}/feedback/workout`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ workout_type: workoutType, score, reason: reasonCode || null, date: today }),
+      }).catch(() => {});
+    } else if (type === 'meal' && mealId) {
+      fetch(`${API}/api/users/${encodeURIComponent(userId)}/feedback/meal`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          meal_id: mealId, meal_name: mealName || null,
+          provider: mealProvider || null, category: mealCategory || null,
+          score, reason: reasonCode || null, date: today,
+        }),
+      }).catch(() => {});
+    }
+  };
 
   if (submitted) return (
     <div className="ai-feedback ai-fb-done">
@@ -1504,14 +1665,29 @@ function AIFeedback({ type }) {
   return (
     <div className="ai-feedback">
       <span className="ai-fb-prompt">Was this helpful?</span>
-      <button className={`ai-fb-btn ${rating === 'up' ? 'ai-fb-up' : ''}`} onClick={() => { setRating('up'); setSubmitted(true); }}>👍</button>
-      <button className={`ai-fb-btn ${rating === 'down' ? 'ai-fb-down' : ''}`} onClick={() => setRating(r => r === 'down' ? null : 'down')}>👎</button>
+      <button
+        className={`ai-fb-btn ${rating === 'up' ? 'ai-fb-up' : ''}`}
+        onClick={() => { setRating('up'); sendFeedback(1, null); setSubmitted(true); }}
+      >👍</button>
+      <button
+        className={`ai-fb-btn ${rating === 'down' ? 'ai-fb-down' : ''}`}
+        onClick={() => setRating(r => r === 'down' ? null : 'down')}
+      >👎</button>
       {rating === 'down' && (
         <div className="ai-fb-reasons">
-          {FEEDBACK_REASONS[type].map(r => (
-            <button key={r} className={`ai-fb-reason ${reason === r ? 'ai-fb-reason-sel' : ''}`} onClick={() => setReason(r)}>{r}</button>
+          {FEEDBACK_REASONS[type].map(({ label, code }) => (
+            <button
+              key={code}
+              className={`ai-fb-reason ${reason === code ? 'ai-fb-reason-sel' : ''}`}
+              onClick={() => setReason(code)}
+            >{label}</button>
           ))}
-          {reason && <button className="btn btn-primary ai-fb-submit" onClick={() => setSubmitted(true)}>Send</button>}
+          {reason && (
+            <button
+              className="btn btn-primary ai-fb-submit"
+              onClick={() => { sendFeedback(-1, reason); setSubmitted(true); }}
+            >Send</button>
+          )}
         </div>
       )}
     </div>
@@ -2403,6 +2579,7 @@ export default function App() {
   const [orderLoading,       setOrderLoading]      = useState(false);
   const [adherenceData,      setAdherenceData]     = useState(null);
   const [learningData,       setLearningData]      = useState(null);
+  const [preferenceData,     setPreferenceData]    = useState(null);
   const [progressData,       setProgressData]      = useState(null);
 
   // ── Auth ───────────────────────────────────────────────────────
@@ -2437,6 +2614,10 @@ export default function App() {
     fetch(`${API}/api/users/${encodeURIComponent(userId)}/learning-insights`)
       .then(r => r.ok ? r.json() : null)
       .then(d => { if (d) setLearningData(d); })
+      .catch(() => {});
+    fetch(`${API}/api/users/${encodeURIComponent(userId)}/preference-insights`)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d) setPreferenceData(d); })
       .catch(() => {});
   };
 
@@ -2553,7 +2734,7 @@ export default function App() {
 
   const handleRestart = () => {
     setStep(1); setResults(null); setSelectedSkus(new Set());
-    setAdherenceData(null); setProgressData(null); setLearningData(null);
+    setAdherenceData(null); setProgressData(null); setLearningData(null); setPreferenceData(null);
     setOrderConfirmation(null); setCalendarEvents([]); setPainAreas([]);
   };
 
@@ -2834,6 +3015,14 @@ export default function App() {
                   </div>
                 )}
 
+                {/* Preference note from preference engine */}
+                {dr && dr.preference_note && (
+                  <div className="personalization-note preference-note">
+                    <span className="pn-icon">❤️</span>
+                    <span>{dr.preference_note}</span>
+                  </div>
+                )}
+
                 {/* ══ OCCUPATIONAL HEALTH ADVISOR ══ */}
                 {dr && dr.health_advisor_message && (
                   <HealthAdvisorPanel
@@ -2882,6 +3071,9 @@ export default function App() {
                     {/* Personal Learning Panel */}
                     <PersonalLearningPanel learningData={learningData} />
 
+                    {/* Preference Insights Panel */}
+                    <PreferenceInsightsPanel preferenceData={preferenceData} />
+
                     {/* Cycle phase */}
                     {cyclePhase && cyclePhase !== 'unknown' && (
                       <CyclePhasePanel phase={cyclePhase} />
@@ -2913,7 +3105,12 @@ export default function App() {
                             dr={dr}
                           />
                           {/* Step 8: Workout feedback */}
-                          <AIFeedback type="workout" />
+                          <AIFeedback
+                            type="workout"
+                            userId={profile.name}
+                            workoutType={dr.selected_workout?.workout_type}
+                            date={dr.date}
+                          />
                         </>
                       )}
 
@@ -2945,7 +3142,15 @@ export default function App() {
                           )}
                         </div>
                         {/* Step 8: Meal feedback */}
-                        <AIFeedback type="meal" />
+                        <AIFeedback
+                          type="meal"
+                          userId={profile.name}
+                          mealId={dr.selected_lunch?.id || dr.selected_dinner?.id || 'meal'}
+                          mealName={dr.selected_lunch?.name || dr.selected_dinner?.name}
+                          mealProvider={dr.selected_lunch?.provider || dr.selected_dinner?.provider}
+                          mealCategory={dr.selected_lunch?.diet_tags?.[0] || dr.selected_dinner?.diet_tags?.[0]}
+                          date={dr.date}
+                        />
                       </div>
 
                       {/* Outcome Tracker */}

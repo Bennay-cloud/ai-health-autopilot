@@ -3998,3 +3998,143 @@ body {
   .plp-conf-bar       { width: 36px; }
   .plp-header         { padding: 1rem; gap: 0.625rem; }
 }
+
+/* ── PreferenceInsightsPanel ──────────────────────────────────── */
+
+.pip-card {
+  background: var(--card-bg, #fff);
+  border: 1px solid #f9a8d4;
+  border-radius: var(--radius, 12px);
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.pip-card.pip-empty { opacity: 0.85; }
+
+.pip-header {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 1.125rem 1.25rem;
+  border-bottom: 1px solid #fce7f3;
+  background: linear-gradient(135deg, #fff1f2 0%, #fff 100%);
+}
+
+.pip-icon { font-size: 1.5rem; flex-shrink: 0; }
+
+.pip-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #1e293b;
+}
+
+.pip-subtitle {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  margin-top: 0.1rem;
+}
+
+.pip-sections {
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.pip-section-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94a3b8;
+  margin-bottom: 0.5rem;
+}
+
+.pip-tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pip-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 99px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.pip-tag-liked {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.pip-tag-liked::before { content: '👍 '; font-size: 0.75rem; }
+
+.pip-tag-disliked {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.pip-tag-disliked::before { content: '👎 '; font-size: 0.75rem; }
+
+.pip-chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pip-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.75rem;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 99px;
+  font-size: 0.8rem;
+  color: #475569;
+  font-weight: 500;
+}
+
+.pip-insights-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.pip-insight-item {
+  font-size: 0.82rem;
+  color: #475569;
+  line-height: 1.5;
+  padding-left: 1rem;
+  position: relative;
+}
+
+.pip-insight-item::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #f9a8d4;
+  font-weight: 700;
+}
+
+/* Preference note banner variant */
+.preference-note {
+  background: #fff1f2;
+  border-color: #fda4af;
+  color: #9f1239;
+}
+
+@media (max-width: 600px) {
+  .pip-header   { padding: 0.875rem 1rem; gap: 0.625rem; }
+  .pip-sections { padding: 0.875rem 1rem; }
+}
