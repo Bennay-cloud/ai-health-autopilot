@@ -1,2 +1,40 @@
+# OS files
 .DS_Store
 .claude/
+
+# Python environments
+.venv/
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Testing & tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Generated files
+generated_pdfs/
+*.pdf
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Editor
+.vscode/
+.idea/
+
+# Node / Frontend build artifacts
+node_modules/
+dist/
+build/
+dist-ssr/
