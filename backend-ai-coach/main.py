@@ -14,6 +14,7 @@ import workout_session_service as wss
 import decision_record_service as drs
 import anti_ghosting_service as ags
 import outcome_tracking_service as ots
+import personal_learning_engine as ple
 from db import decision_records_collection, outcome_records_collection
 from occupation_engine import list_professions
 from pain_engine import list_pain_areas
@@ -275,6 +276,20 @@ def daily_decision(request: DailyDecisionRequest):
     except Exception as e:
         print(f"Anti-ghosting adaptation failed (non-critical): {e}")
 
+    # Personal learning: attach personalization note when applicable
+    try:
+        history = drs.get_user_history(decision_records_collection, effective_user_id)
+        outcomes = ots.get_user_outcomes(outcome_records_collection, effective_user_id)
+        if history:
+            learning_profile = ple.analyze_learning_profile(history, outcomes, effective_user_id)
+            note = ple.build_personalization_note(
+                learning_profile,
+                response.workout_duration_breakdown.total_minutes,
+            )
+            response.personalization_note = note
+    except Exception as e:
+        print(f"Personal learning note failed (non-critical): {e}")
+
     result = response.model_dump()
     result["record_id"] = record_id
     result["adaptive_recommendation"] = adaptive
@@ -361,6 +376,49 @@ def user_adaptive_recommendation(
         return ags.generate_adaptive_recommendation(
             records, adherence, current_duration, current_intensity
         ).model_dump()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ── Personal Learning Endpoints ───────────────────────────────────
+
+@app.get("/api/users/{user_id}/learning-profile")
+def learning_profile(user_id: str):
+    try:
+        records  = drs.get_user_history(decision_records_collection, user_id)
+        outcomes = ots.get_user_outcomes(outcome_records_collection, user_id)
+        profile  = ple.analyze_learning_profile(records, outcomes, user_id)
+        return profile.model_dump()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/users/{user_id}/learning-insights")
+def learning_insights(user_id: str):
+    try:
+        records  = drs.get_user_history(decision_records_collection, user_id)
+        outcomes = ots.get_user_outcomes(outcome_records_collection, user_id)
+        profile  = ple.analyze_learning_profile(records, outcomes, user_id)
+        return ple.get_learning_insights_view(profile).model_dump()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/users/{user_id}/learning/recompute")
+def learning_recompute(user_id: str):
+    """Forces a fresh recomputation of the learning profile for this user."""
+    try:
+        records  = drs.get_user_history(decision_records_collection, user_id)
+        outcomes = ots.get_user_outcomes(outcome_records_collection, user_id)
+        profile  = ple.analyze_learning_profile(records, outcomes, user_id)
+        return {
+            "status": "recomputed",
+            "user_id": user_id,
+            "total_days_analyzed": profile.total_days_analyzed,
+            "confidence_level": profile.confidence_level,
+            "patterns_found": len(profile.learned_patterns),
+            "generated_at": profile.generated_at,
+        }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

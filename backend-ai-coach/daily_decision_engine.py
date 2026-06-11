@@ -157,6 +157,8 @@ class DailyDecisionResponse(BaseModel):
     why_this_matters: Optional[dict] = None
     health_advisor_message: Optional[str] = None
     occupational_health_risk_score: Optional[dict] = None
+    # ── Personal Learning ──────────────
+    personalization_note: Optional[str] = None
 
 
 # ── Cycle Phase Workout Preferences ──────────────────────────────
@@ -495,4 +497,5 @@ def generate_daily_decision(request: DailyDecisionRequest) -> DailyDecisionRespo
         why_this_matters=why_this_matters_out,
         health_advisor_message=advisor_message_out,
         occupational_health_risk_score=risk_score_out,
+        personalization_note=None,  # populated by main.py after learning profile lookup
     )
