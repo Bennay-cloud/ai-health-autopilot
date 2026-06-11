@@ -505,6 +505,459 @@ function PreferenceInsightsPanel({ preferenceData }) {
   );
 }
 
+// ── CollapsibleSection ────────────────────────────────────────────
+
+function CollapsibleSection({ title, icon, eyebrow, children, defaultOpen = false }) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div className={`cs-section ${open ? 'cs-open' : ''}`}>
+      <button className="cs-toggle" onClick={() => setOpen(o => !o)}>
+        <div className="cs-toggle-left">
+          {eyebrow && <span className="cs-eyebrow">{eyebrow}</span>}
+          <div className="cs-toggle-title-row">
+            <span className="cs-icon">{icon}</span>
+            <span className="cs-title">{title}</span>
+          </div>
+        </div>
+        <span className="cs-chevron">{open ? '▲' : '▼'}</span>
+      </button>
+      {open && <div className="cs-body">{children}</div>}
+    </div>
+  );
+}
+
+// ── TodayMissionHero ──────────────────────────────────────────────
+
+function TodayMissionHero({ dr, profile, adherenceData }) {
+  const missionTitle =
+    dr.why_this_matters?.todays_priority ||
+    (dr.day_type === 'recovery'    ? 'Active Recovery & Restoration'
+   : dr.day_type === 'performance' ? 'Maximum Performance Day'
+   :                                 'Consistent Progress & Health');
+
+  const explanation = dr.coaching_message || dr.explanation ||
+    'Your AI has analyzed today\'s context and built your optimal plan.';
+
+  const impactChips = (dr.health_priorities || []).slice(0, 3).map(p => p.human_label);
+  if (impactChips.length === 0) {
+    const defaults = {
+      performance: ['More energy', 'Build strength', 'Improve focus'],
+      recovery:    ['Reduce tension', 'Improve sleep', 'Mental reset'],
+      normal:      ['Build consistency', 'Improve fitness', 'Feel better'],
+    };
+    impactChips.push(...(defaults[dr.day_type] || defaults.normal));
+  }
+
+  const streak = adherenceData?.streaks?.current_streak ?? 0;
+  const cyclePhase = dr.cycle_phase?.phase;
+
+  return (
+    <div className={`tmh-hero tmh-${dr.day_type}`}>
+      <div className="tmh-eyebrow">🤖 Today's Mission</div>
+      <div className="tmh-title">{missionTitle}</div>
+      <div className="tmh-explanation">{explanation}</div>
+
+      <div className="tmh-meta-row">
+        <div className="tmh-meta-chip">
+          <span>{DAY_LABELS[dr.day_type]} Day</span>
+        </div>
+        <div className="tmh-meta-chip">
+          <span>⚡ Recovery {dr.recovery_score}</span>
+        </div>
+        <div className="tmh-meta-chip">
+          <span>🎯 {profile.ziel}</span>
+        </div>
+        {streak > 0 && (
+          <div className="tmh-meta-chip tmh-streak-chip">
+            <span>🔥 {streak} day streak</span>
+          </div>
+        )}
+        {cyclePhase && cyclePhase !== 'unknown' && (
+          <span className={`cycle-phase-badge ${cyclePhase} tmh-cycle-badge`}>
+            {CYCLE_PHASE_LABELS[cyclePhase]}
+          </span>
+        )}
+      </div>
+
+      {(dr.personalization_note || dr.preference_note) && (
+        <div className="tmh-ai-notes">
+          {dr.personalization_note && (
+            <div className="tmh-ai-note tmh-note-learn">
+              <span>🧠</span><span>{dr.personalization_note}</span>
+            </div>
+          )}
+          {dr.preference_note && (
+            <div className="tmh-ai-note tmh-note-pref">
+              <span>❤️</span><span>{dr.preference_note}</span>
+            </div>
+          )}
+        </div>
+      )}
+
+      <div className="tmh-impact-section">
+        <div className="tmh-impact-label">Expected Impact</div>
+        <div className="tmh-impact-chips">
+          {impactChips.map((chip, i) => (
+            <span key={i} className="tmh-impact-chip">✓ {chip}</span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── GoalProgressKPI ───────────────────────────────────────────────
+
+function GoalProgressKPI({ adherenceData }) {
+  const a = adherenceData?.adherence;
+  const s = adherenceData?.streaks;
+  const days    = a?.total_days_tracked ?? 0;
+  const overall = a?.overall_adherence  ?? 0;
+  const streak  = s?.current_streak     ?? 0;
+
+  if (days === 0) {
+    return (
+      <div className="gp-kpi gp-start">
+        <span className="gp-kpi-icon">🎯</span>
+        <div className="gp-kpi-text">
+          <div className="gp-kpi-value">Day 1</div>
+          <div className="gp-kpi-label">Start your journey — log your first outcome today</div>
+        </div>
+      </div>
+    );
+  }
+
+  const isGood = overall >= 80;
+  const isWarn = overall >= 60 && overall < 80;
+  const status    = isGood ? 'On Track' : isWarn ? 'Slightly Behind' : 'Needs Focus';
+  const statusCls = isGood ? 'gp-good'  : isWarn ? 'gp-warn'        : 'gp-risk';
+  const badge     = isGood ? '✓'        : isWarn ? '⚠'              : '↓';
+
+  return (
+    <div className={`gp-kpi ${statusCls}`}>
+      <span className="gp-kpi-icon">🎯</span>
+      <div className="gp-kpi-text">
+        <div className="gp-kpi-value">
+          {Math.round(overall)}%
+          <span className="gp-kpi-status"> {status}</span>
+        </div>
+        <div className="gp-kpi-label">Goal Progress · {days} days · {streak > 0 ? `🔥 ${streak} streak` : 'No streak yet'}</div>
+      </div>
+      <span className="gp-kpi-badge">{badge}</span>
+    </div>
+  );
+}
+
+// ── AutopilotScore ────────────────────────────────────────────────
+
+function AutopilotScore({ adherenceData }) {
+  const a = adherenceData?.adherence;
+  const s = adherenceData?.streaks;
+
+  if (!a || a.total_days_tracked === 0) {
+    return (
+      <div className="aps-card">
+        <div className="aps-header">
+          <div>
+            <div className="aps-title">Autopilot Score</div>
+            <div className="aps-interpretation">Complete your first day to unlock your score.</div>
+          </div>
+          <div className="aps-score-circle aps-empty"><span className="aps-num">—</span></div>
+        </div>
+      </div>
+    );
+  }
+
+  const streak      = s?.current_streak ?? 0;
+  const streakBonus = Math.min(10, streak);
+  const base        = Math.round(
+    a.workout_adherence * 0.4 +
+    a.meal_adherence    * 0.3 +
+    a.sleep_adherence   * 0.3
+  );
+  const score = Math.min(100, base + streakBonus);
+  const cls   = score >= 75 ? 'aps-high' : score >= 50 ? 'aps-mid' : 'aps-low';
+  const interpretation =
+    score >= 80 ? 'Your health habits are becoming automatic.' :
+    score >= 60 ? 'Good momentum — keep building consistency.' :
+    score >= 40 ? 'You\'re establishing the foundation.' :
+                  'Starting to build healthy habits.';
+
+  return (
+    <div className="aps-card">
+      <div className="aps-header">
+        <div>
+          <div className="aps-title">Autopilot Score</div>
+          <div className="aps-interpretation">{interpretation}</div>
+        </div>
+        <div className={`aps-score-circle ${cls}`}>
+          <span className="aps-num">{score}</span>
+          <span className="aps-denom">/100</span>
+        </div>
+      </div>
+      <div className="aps-bar-wrap">
+        <div className="aps-bar-fill" style={{ width: `${score}%` }} />
+      </div>
+      <div className="aps-breakdown">
+        {[
+          { label: 'Workout', val: a.workout_adherence, weight: 40 },
+          { label: 'Meals',   val: a.meal_adherence,    weight: 30 },
+          { label: 'Sleep',   val: a.sleep_adherence,   weight: 30 },
+        ].map(item => (
+          <div key={item.label} className="aps-bd-item">
+            <span className="aps-bd-label">{item.label}</span>
+            <div className="aps-bd-bar">
+              <div className="aps-bd-fill" style={{ width: `${item.val}%` }} />
+            </div>
+            <span className="aps-bd-val">{Math.round(item.val)}%</span>
+          </div>
+        ))}
+        {streak > 0 && <div className="aps-streak-bonus">🔥 +{streakBonus} streak bonus applied</div>}
+      </div>
+    </div>
+  );
+}
+
+// ── AIHealthSummaryCard ───────────────────────────────────────────
+
+function AIHealthSummaryCard({ message, profession, occProfile, priorities, painAreas }) {
+  const [expanded, setExpanded] = useState(false);
+  if (!message && !occProfile) return null;
+
+  const risks         = occProfile?.health_risks?.slice(0, 3) || [];
+  const topPriorities = (priorities || []).slice(0, 3).map(p => p.human_label);
+
+  return (
+    <div className="ahs-card">
+      <div className="ahs-header">
+        <span className="ahs-icon">⚕</span>
+        <div>
+          <div className="ahs-title">AI Health Summary</div>
+          {profession && <div className="ahs-profession">{profession}</div>}
+        </div>
+      </div>
+
+      <div className="ahs-body">
+        {risks.length > 0 && (
+          <div className="ahs-col">
+            <div className="ahs-col-label">Risks Detected</div>
+            {risks.map((r, i) => (
+              <div key={i} className="ahs-risk-item">
+                <span className="ahs-risk-dot" />
+                <span>{r}</span>
+              </div>
+            ))}
+          </div>
+        )}
+        {topPriorities.length > 0 && (
+          <div className="ahs-col">
+            <div className="ahs-col-label">Today's Focus</div>
+            {topPriorities.map((p, i) => (
+              <div key={i} className="ahs-priority-item">
+                <span className="ahs-check">✓</span>
+                <span>{p}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <button className="ahs-expand-btn" onClick={() => setExpanded(e => !e)}>
+        {expanded ? 'Hide Full Analysis ▲' : 'Read Full Analysis ▼'}
+      </button>
+
+      {expanded && (
+        <div className="ahs-full-analysis">
+          {message && <p className="ahs-full-text">{message}</p>}
+          {occProfile?.work_demands?.length > 0 && (
+            <div className="ahs-work-demands">
+              {occProfile.work_demands.slice(0, 4).map((d, i) => (
+                <span key={i} className="orc-demand-chip">{d}</span>
+              ))}
+            </div>
+          )}
+          {painAreas?.length > 0 && (
+            <div className="orc-pain-chips" style={{ marginTop: '0.5rem' }}>
+              {painAreas.map((p, i) => (
+                <span key={i} className={`orc-pain-chip sev-chip-${p.severity >= 7 ? 'high' : p.severity >= 4 ? 'mid' : 'low'}`}>
+                  {p.area.replace('_', ' ')} · {p.severity}/10
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── HealthPriorityVisual ──────────────────────────────────────────
+
+function HealthPriorityVisual({ priorities }) {
+  if (!priorities || priorities.length === 0) return null;
+  const top     = priorities.slice(0, 4);
+  const maxRank = top.length;
+
+  return (
+    <div className="hpv-card">
+      <div className="hpv-header">
+        <span>🎯</span>
+        <div className="hpv-title">Today's Health Mission</div>
+      </div>
+      <div className="hpv-list">
+        {top.map((p, i) => {
+          const barWidth = Math.round(((maxRank - i) / maxRank) * 100);
+          const uc = URGENCY_CONFIG[p.urgency] || URGENCY_CONFIG.supporting;
+          return (
+            <div key={i} className={`hpv-item ${uc.cls}`}>
+              <div className="hpv-item-header">
+                <span className="hpv-rank">Priority {p.rank}</span>
+                <span className={`hpv-urgency-badge ${uc.cls}`}>{uc.label}</span>
+              </div>
+              <div className="hpv-label">{p.human_label}</div>
+              <div className="hpv-bar-wrap">
+                <div className="hpv-bar-fill" style={{ width: `${barWidth}%` }} />
+              </div>
+              {p.reason && <div className="hpv-reason">{p.reason}</div>}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ── CausalChainCard ───────────────────────────────────────────────
+
+function CausalChainCard({ data, profession, dr }) {
+  const [showBenefits, setShowBenefits] = useState(false);
+  if (!data) return null;
+
+  const chain = [
+    profession || 'Professional',
+    ...(data.risks_detected?.slice(0, 2) || []),
+    data.todays_priority || `${DAY_LABELS[dr?.day_type] || 'Optimal'} workout selected`,
+  ];
+
+  return (
+    <div className="causal-card">
+      <div className="causal-header">
+        <span className="causal-icon">🔗</span>
+        <div>
+          <div className="causal-title">Why This Training</div>
+          <div className="causal-sub">The reasoning chain behind today's plan</div>
+        </div>
+      </div>
+
+      <div className="causal-chain">
+        {chain.map((step, i) => (
+          <React.Fragment key={i}>
+            <div className={`causal-step ${i === 0 ? 'causal-step-root' : ''} ${i === chain.length - 1 ? 'causal-step-final' : ''}`}>
+              {step}
+            </div>
+            {i < chain.length - 1 && <div className="causal-arrow">↓</div>}
+          </React.Fragment>
+        ))}
+      </div>
+
+      <button className="causal-benefits-btn" onClick={() => setShowBenefits(b => !b)}>
+        Expected Benefits {showBenefits ? '▲' : '▼'}
+      </button>
+
+      {showBenefits && (
+        <div className="causal-benefits">
+          {[
+            { period: 'Today',      items: (data.physiological_adaptations || []).slice(0, 2) },
+            { period: '30 Days',    items: (data.work_performance_benefits?.benefits || []).slice(0, 2) },
+            { period: '12 Months',  items: (data.long_term_benefits || []).slice(0, 2) },
+          ].map(({ period, items }) => (
+            items.length > 0 && (
+              <div key={period} className="causal-benefit-col">
+                <div className="causal-benefit-period">{period}</div>
+                {items.map((item, i) => (
+                  <div key={i} className="causal-benefit-item">✓ {item}</div>
+                ))}
+              </div>
+            )
+          ))}
+        </div>
+      )}
+
+      {data.what_if_ignored?.educational_note && (
+        <details className="causal-full-details">
+          <summary>What if this is ignored?</summary>
+          <p className="causal-ignored-note">{data.what_if_ignored.educational_note}</p>
+        </details>
+      )}
+    </div>
+  );
+}
+
+// ── AIPersonalizationJourney ──────────────────────────────────────
+
+function AIPersonalizationJourney({ adherenceData }) {
+  const days = adherenceData?.adherence?.total_days_tracked ?? 0;
+
+  const levels = [
+    { minDays: 0,  level: 1, label: 'Learning',      desc: 'Collecting your behavioral data',     icon: '📡' },
+    { minDays: 7,  level: 2, label: 'Understanding',  desc: 'Detecting your personal patterns',    icon: '🔍' },
+    { minDays: 14, level: 3, label: 'Personalizing',  desc: 'Adapting recommendations to you',    icon: '🎯' },
+    { minDays: 30, level: 4, label: 'Autopilot',      desc: 'Fully optimized for your profile',   icon: '🚀' },
+  ];
+
+  const currentLevel = levels.reduce((curr, l) => days >= l.minDays ? l : curr, levels[0]);
+  const nextLevel    = levels.find(l => l.minDays > days);
+  const progressPct  = nextLevel
+    ? Math.round(((days - currentLevel.minDays) / (nextLevel.minDays - currentLevel.minDays)) * 100)
+    : 100;
+
+  return (
+    <div className="apj-card">
+      <div className="apj-header">
+        <span>🤖</span>
+        <div>
+          <span className="apj-title">AI Personalization Journey</span>
+          <span className="apj-current"> · Level {currentLevel.level}: {currentLevel.label}</span>
+        </div>
+      </div>
+
+      {nextLevel ? (
+        <div className="apj-progress-row">
+          <span className="apj-progress-label">
+            Day {days} · {nextLevel.minDays - days} day{nextLevel.minDays - days !== 1 ? 's' : ''} to Level {nextLevel.level}
+          </span>
+          <div className="apj-progress-bar">
+            <div className="apj-progress-fill" style={{ width: `${progressPct}%` }} />
+          </div>
+        </div>
+      ) : (
+        <div className="apj-progress-row">
+          <span className="apj-progress-label">Level 4 reached — full personalization active</span>
+          <div className="apj-progress-bar"><div className="apj-progress-fill" style={{ width: '100%' }} /></div>
+        </div>
+      )}
+
+      <div className="apj-levels">
+        {levels.map((l) => {
+          const reached    = days >= l.minDays;
+          const isCurrent  = l.level === currentLevel.level;
+          return (
+            <div key={l.level} className={`apj-level ${reached ? 'apj-reached' : 'apj-future'} ${isCurrent ? 'apj-current' : ''}`}>
+              <div className="apj-level-icon">{l.icon}</div>
+              <div className="apj-level-content">
+                <div className="apj-level-label">Level {l.level}: {l.label}</div>
+                <div className="apj-level-desc">{l.desc}</div>
+              </div>
+              {reached && !isCurrent && <span className="apj-done">✓</span>}
+              {isCurrent && <span className="apj-badge">Current</span>}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 // ── HealthAdvisorPanel ────────────────────────────────────────────
 
 function HealthAdvisorPanel({ message, profession }) {
@@ -977,10 +1430,13 @@ function OutcomeTracker({ recordId, recommendedDuration, onSubmitted }) {
 
   /* ── Success state ── */
   if (result?.outcome) {
-    const o     = result.outcome;
-    const score = o.overall_completion_percentage;
-    const cls   = score >= 70 ? 'ot-score-high' : score >= 50 ? 'ot-score-mid' : 'ot-score-low';
+    const o         = result.outcome;
+    const score     = o.overall_completion_percentage;
+    const cls       = score >= 70 ? 'ot-score-high' : score >= 50 ? 'ot-score-mid' : 'ot-score-low';
     const mealLabel = o.meal_ordered && o.meal_confirmed ? '✓' : o.meal_ordered ? '½' : '✗';
+    const workoutPts = o.completed_workout ? Math.max(5, Math.round(o.workout_completion_percentage * 0.12)) : 0;
+    const mealPts    = (o.meal_ordered && o.meal_confirmed) ? 8 : o.meal_ordered ? 4 : 0;
+    const sleepPts   = o.sleep_target_achieved ? 10 : 0;
     return (
       <div className="ot-container ot-done">
         <div className="ot-done-header">
@@ -1007,6 +1463,22 @@ function OutcomeTracker({ recordId, recommendedDuration, onSubmitted }) {
             </div>
           </div>
         </div>
+        <div className="ot-points-row">
+          {workoutPts > 0 && (
+            <div className="ot-points-chip ot-pts-workout">💪 +{workoutPts} Consistency Points</div>
+          )}
+          {mealPts > 0 && (
+            <div className="ot-points-chip ot-pts-meal">🍽 +{mealPts} Nutrition Points</div>
+          )}
+          {sleepPts > 0 && (
+            <div className="ot-points-chip ot-pts-sleep">😴 +{sleepPts} Recovery Points</div>
+          )}
+        </div>
+        {score >= 70 && (
+          <div className="ot-motivation">
+            {MOTIVATIONAL_MESSAGES[Math.floor(Math.random() * MOTIVATIONAL_MESSAGES.length)]}
+          </div>
+        )}
       </div>
     );
   }
@@ -1015,6 +1487,7 @@ function OutcomeTracker({ recordId, recommendedDuration, onSubmitted }) {
   return (
     <div className="ot-container">
       <div className="ot-title">Log Today's Outcomes</div>
+      <div className="ot-subtitle">Earn consistency points and build your streak</div>
 
       {/* Workout */}
       <div className="ot-section">
@@ -1823,10 +2296,11 @@ function AIWorkoutCard({ workout, breakdown, scheduleTime, token, dr }) {
 
 function AIMealDeliveryCard({ label, meal, deliveryTime, mealType, token, dr, goal }) {
   function getAIReason() {
-    if (dr.day_type === 'performance' && meal.protein_g >= 30) return 'High protein supports today\'s strength goals';
-    if (dr.day_type === 'recovery') return 'Light macros match today\'s recovery focus';
-    if (meal.protein_g >= 25) return 'Supports muscle protein synthesis';
-    return `Matched to your ${goal} targets`;
+    if (dr.day_type === 'performance' && meal.protein_g >= 30) return '🍗 Helps build muscle today';
+    if (dr.day_type === 'recovery')   return '😴 Supports recovery';
+    if (goal === 'Fettabbau')         return '🔥 Supports fat loss';
+    if (meal.protein_g >= 25)         return '💪 Refuels after training';
+    return `⚡ Matched to your ${goal} targets`;
   }
   return (
     <div className="ai-meal-wrap">
@@ -3007,94 +3481,35 @@ export default function App() {
                   </button>
                 </div>
 
-                {/* Personalization note from learning engine */}
-                {dr && dr.personalization_note && (
-                  <div className="personalization-note">
-                    <span className="pn-icon">🧠</span>
-                    <span>{dr.personalization_note}</span>
-                  </div>
-                )}
+                {/* ══ 1. TODAY'S MISSION HERO ══ */}
+                {dr && <TodayMissionHero dr={dr} profile={profile} adherenceData={adherenceData} />}
 
-                {/* Preference note from preference engine */}
-                {dr && dr.preference_note && (
-                  <div className="personalization-note preference-note">
-                    <span className="pn-icon">❤️</span>
-                    <span>{dr.preference_note}</span>
-                  </div>
-                )}
+                {/* Goal Progress KPI */}
+                <GoalProgressKPI adherenceData={adherenceData} />
 
-                {/* ══ OCCUPATIONAL HEALTH ADVISOR ══ */}
-                {dr && dr.health_advisor_message && (
-                  <HealthAdvisorPanel
-                    message={dr.health_advisor_message}
-                    profession={dr.occupation_profile?.profession_display}
-                  />
-                )}
-
-                {dr && (dr.occupation_profile || painAreas.length > 0) && (
-                  <OccupationalRiskCard
-                    occProfile={dr.occupation_profile}
-                    painAreas={painAreas}
-                  />
-                )}
-
-                {dr && dr.health_priorities?.length > 0 && (
-                  <HealthPriorityStack priorities={dr.health_priorities} />
-                )}
-
-                {dr && dr.why_this_matters && (
-                  <WhyThisMattersCard data={dr.why_this_matters} />
-                )}
-
-                {/* ══ AI COMMAND CENTER ══ */}
+                {/* ══ 2. TODAY'S ACTIONS ══ */}
                 {dr && (
                   <div className="ai-command-center">
-
-                    {/* Step 1: AI Decision Header */}
-                    <AIDecisionHeader
-                      dr={dr}
-                      profile={profile}
-                      workoutTime={workoutTime}
-                      lunchTime={lunchTime}
-                      dinnerTime={dinnerTime}
-                    />
-
-                    {/* Step 2: AI Reasoning (collapsible) */}
-                    <AIReasoningCard dr={dr} profile={profile} />
-
-                    {/* Step 3+9: AI Memory + Evolution row */}
-                    <div className="ai-panels-row">
-                      <AIMemoryPanel adherenceData={adherenceData} />
-                      <AIEvolutionTimeline adherenceData={adherenceData} />
-                    </div>
-
-                    {/* Personal Learning Panel */}
-                    <PersonalLearningPanel learningData={learningData} />
-
-                    {/* Preference Insights Panel */}
-                    <PreferenceInsightsPanel preferenceData={preferenceData} />
-
-                    {/* Cycle phase */}
-                    {cyclePhase && cyclePhase !== 'unknown' && (
-                      <CyclePhasePanel phase={cyclePhase} />
-                    )}
-
-                    {/* Schedule warnings */}
-                    {dr.schedule_warnings?.length > 0 && (
-                      <div className="schedule-warnings">
-                        {dr.schedule_warnings.map((w, i) => (
-                          <div key={i} className="schedule-warning-item">{w}</div>
-                        ))}
-                      </div>
-                    )}
-
-                    {/* Today's Actions */}
                     <div className="ai-actions-section">
                       <div className="ai-actions-eyebrow">Today's Actions</div>
 
                       <ScheduleTimeline schedule={scheduleItems} />
 
-                      {/* Step 4: AI Workout Card */}
+                      {/* Cycle phase — shown inline with actions */}
+                      {cyclePhase && cyclePhase !== 'unknown' && (
+                        <CyclePhasePanel phase={cyclePhase} />
+                      )}
+
+                      {/* Schedule warnings */}
+                      {dr.schedule_warnings?.length > 0 && (
+                        <div className="schedule-warnings">
+                          {dr.schedule_warnings.map((w, i) => (
+                            <div key={i} className="schedule-warning-item">{w}</div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Workout */}
                       {dr.selected_workout && (
                         <>
                           <AIWorkoutCard
@@ -3104,7 +3519,6 @@ export default function App() {
                             token={token}
                             dr={dr}
                           />
-                          {/* Step 8: Workout feedback */}
                           <AIFeedback
                             type="workout"
                             userId={profile.name}
@@ -3114,7 +3528,7 @@ export default function App() {
                         </>
                       )}
 
-                      {/* Step 5: AI Meal Cards */}
+                      {/* Meals */}
                       <div className="cmd-meals-section">
                         <div className="cmd-meals-label">Deine Mahlzeiten heute</div>
                         <div className="cmd-meals-grid">
@@ -3141,7 +3555,6 @@ export default function App() {
                             />
                           )}
                         </div>
-                        {/* Step 8: Meal feedback */}
                         <AIFeedback
                           type="meal"
                           userId={profile.name}
@@ -3153,7 +3566,7 @@ export default function App() {
                         />
                       </div>
 
-                      {/* Outcome Tracker */}
+                      {/* Outcome Tracker (gamified) */}
                       {dr.record_id && (
                         <OutcomeTracker
                           recordId={dr.record_id}
@@ -3162,24 +3575,70 @@ export default function App() {
                         />
                       )}
                     </div>
-
                   </div>
                 )}
 
-                {/* ══ Step 7: PROGRESS SECTION ══ */}
-                <AdherenceDashboard data={adherenceData} />
-                <ProgressDashboard
-                  userId={profile.name}
-                  data={progressData}
-                  onCheckinSubmit={() => refreshProgressDashboard(profile.name)}
-                />
+                {/* ══ 3. WHY THE AI CHOSE THIS ══ */}
+                {dr && (
+                  <CollapsibleSection title="Why The AI Chose This" icon="💡" eyebrow="Explanation">
+                    <AIReasoningCard dr={dr} profile={profile} />
+                    {dr.why_this_matters && (
+                      <CausalChainCard
+                        data={dr.why_this_matters}
+                        profession={dr.occupation_profile?.profession_display}
+                        dr={dr}
+                      />
+                    )}
+                  </CollapsibleSection>
+                )}
 
-                {/* ══ Step 6: WEEKLY SNAPSHOT (collapsed by default) ══ */}
-                <WeeklySnapshot
-                  planText={results.planText}
-                  pdfLink={results.pdfLink}
-                  profile={profile}
-                />
+                {/* ══ 4. AI LEARNING & PREFERENCES ══ */}
+                <CollapsibleSection title="AI Learning &amp; Preferences" icon="🧠" eyebrow="Personalization">
+                  <div className="ai-panels-row">
+                    <AIMemoryPanel adherenceData={adherenceData} />
+                    <AIPersonalizationJourney adherenceData={adherenceData} />
+                  </div>
+                  <PersonalLearningPanel learningData={learningData} />
+                  <PreferenceInsightsPanel preferenceData={preferenceData} />
+                </CollapsibleSection>
+
+                {/* ══ 5. PROGRESS & CONSISTENCY ══ */}
+                <CollapsibleSection title="Progress &amp; Consistency" icon="📈" eyebrow="Tracking">
+                  <AutopilotScore adherenceData={adherenceData} />
+                  <AdherenceDashboard data={adherenceData} />
+                  <ProgressDashboard
+                    userId={profile.name}
+                    data={progressData}
+                    onCheckinSubmit={() => refreshProgressDashboard(profile.name)}
+                  />
+                </CollapsibleSection>
+
+                {/* ══ 6. WEEKLY PLAN ══ */}
+                <CollapsibleSection title="Weekly Plan" icon="📋" eyebrow="Your Plan">
+                  <WeeklySnapshot
+                    planText={results.planText}
+                    pdfLink={results.pdfLink}
+                    profile={profile}
+                  />
+                </CollapsibleSection>
+
+                {/* ══ 7. ADVANCED HEALTH DETAILS ══ */}
+                {dr && (dr.health_advisor_message || dr.occupation_profile || dr.health_priorities?.length > 0) && (
+                  <CollapsibleSection title="Advanced Health Details" icon="⚕" eyebrow="Health Intelligence">
+                    {(dr.health_advisor_message || dr.occupation_profile) && (
+                      <AIHealthSummaryCard
+                        message={dr.health_advisor_message}
+                        profession={dr.occupation_profile?.profession_display}
+                        occProfile={dr.occupation_profile}
+                        priorities={dr.health_priorities}
+                        painAreas={painAreas}
+                      />
+                    )}
+                    {dr.health_priorities?.length > 0 && (
+                      <HealthPriorityVisual priorities={dr.health_priorities} />
+                    )}
+                  </CollapsibleSection>
+                )}
 
                 {/* ══ MEAL ORDERING ══ */}
                 {results.matchedMeals.length > 0 && (

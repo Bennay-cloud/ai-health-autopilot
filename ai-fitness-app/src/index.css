@@ -4138,3 +4138,459 @@ body {
   .pip-header   { padding: 0.875rem 1rem; gap: 0.625rem; }
   .pip-sections { padding: 0.875rem 1rem; }
 }
+
+/* ============================================================
+   COLLAPSIBLE SECTION  (cs-*)
+   ============================================================ */
+.cs-section {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+.cs-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  gap: 0.5rem;
+}
+.cs-toggle:hover { background: #f8fafc; }
+.cs-toggle-left  { display: flex; flex-direction: column; gap: 0.125rem; }
+.cs-toggle-title-row { display: flex; align-items: center; gap: 0.5rem; }
+.cs-eyebrow  { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; }
+.cs-icon     { font-size: 1.1rem; }
+.cs-title    { font-size: 0.975rem; font-weight: 700; color: #1e293b; }
+.cs-chevron  { font-size: 0.7rem; color: #94a3b8; flex-shrink: 0; transition: transform 0.2s; }
+.cs-open .cs-chevron { transform: rotate(0deg); }
+.cs-body     { padding: 0 1.25rem 1.25rem; display: flex; flex-direction: column; gap: 1rem; }
+
+/* ============================================================
+   TODAY'S MISSION HERO  (tmh-*)
+   ============================================================ */
+.tmh-hero {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #1e40af 100%);
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+.tmh-hero::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 160px; height: 160px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.tmh-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #93c5fd;
+  margin-bottom: 0.5rem;
+}
+.tmh-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+  color: #fff;
+}
+.tmh-explanation {
+  font-size: 0.875rem;
+  color: #cbd5e1;
+  line-height: 1.55;
+  margin-bottom: 1rem;
+}
+.tmh-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.tmh-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 999px;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+.tmh-badge-recovery { background: rgba(16,185,129,0.25); border-color: rgba(16,185,129,0.4); color: #6ee7b7; }
+.tmh-badge-perf     { background: rgba(245,158,11,0.25); border-color: rgba(245,158,11,0.4); color: #fde68a; }
+.tmh-badge-rest     { background: rgba(139,92,246,0.25); border-color: rgba(139,92,246,0.4); color: #ddd6fe; }
+.tmh-chips-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #93c5fd;
+  margin-bottom: 0.4rem;
+}
+.tmh-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.tmh-chip {
+  background: rgba(99,179,237,0.18);
+  border: 1px solid rgba(147,197,253,0.3);
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #bfdbfe;
+}
+.tmh-ai-notes {
+  margin-top: 1rem;
+  padding-top: 0.875rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.tmh-ai-note {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  display: flex;
+  gap: 0.4rem;
+  align-items: flex-start;
+}
+.tmh-ai-note span:first-child { flex-shrink: 0; }
+
+/* ============================================================
+   GOAL PROGRESS KPI  (gp-*)
+   ============================================================ */
+.gp-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+.gp-left   { display: flex; flex-direction: column; gap: 0.2rem; }
+.gp-label  { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; }
+.gp-value  { font-size: 1.5rem; font-weight: 800; color: #1e293b; }
+.gp-sub    { font-size: 0.8rem; color: #64748b; }
+.gp-badge  {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 999px;
+  padding: 0.4rem 0.875rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.gp-good { background: #dcfce7; color: #15803d; }
+.gp-warn { background: #fef9c3; color: #a16207; }
+.gp-risk { background: #fee2e2; color: #b91c1c; }
+.gp-start { background: #eff6ff; color: #1d4ed8; }
+
+/* ============================================================
+   AUTOPILOT SCORE  (aps-*)
+   ============================================================ */
+.aps-card {
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  color: #fff;
+}
+.aps-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.aps-title-col { display: flex; flex-direction: column; gap: 0.2rem; }
+.aps-eyebrow   { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; }
+.aps-title     { font-size: 1rem; font-weight: 700; color: #e2e8f0; }
+.aps-score-col { display: flex; flex-direction: column; align-items: center; }
+.aps-score-num { font-size: 2.5rem; font-weight: 900; line-height: 1; }
+.aps-score-denom { font-size: 0.75rem; color: #64748b; }
+.aps-high .aps-score-num { color: #34d399; }
+.aps-mid  .aps-score-num { color: #fbbf24; }
+.aps-low  .aps-score-num { color: #f87171; }
+.aps-bars { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.875rem; }
+.aps-bar-row { display: flex; flex-direction: column; gap: 0.2rem; }
+.aps-bar-label-row { display: flex; justify-content: space-between; align-items: center; }
+.aps-bar-label { font-size: 0.75rem; color: #94a3b8; }
+.aps-bar-val   { font-size: 0.75rem; font-weight: 700; color: #e2e8f0; }
+.aps-bar-track {
+  height: 6px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.aps-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #3b82f6, #06b6d4);
+  transition: width 0.6s ease;
+}
+.aps-streak {
+  font-size: 0.78rem;
+  color: #fbbf24;
+  font-weight: 600;
+  text-align: center;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+/* ============================================================
+   AI HEALTH SUMMARY CARD  (ahs-*)
+   ============================================================ */
+.ahs-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  padding: 1.25rem;
+}
+.ahs-header   { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+.ahs-icon     { font-size: 1.5rem; }
+.ahs-meta     { display: flex; flex-direction: column; gap: 0.15rem; }
+.ahs-eyebrow  { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; }
+.ahs-prof     { font-size: 0.9rem; font-weight: 700; color: #1e293b; }
+.ahs-columns  { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+.ahs-col-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 0.4rem; }
+.ahs-list     { display: flex; flex-direction: column; gap: 0.3rem; }
+.ahs-item     { font-size: 0.8rem; color: #374151; display: flex; gap: 0.35rem; align-items: flex-start; }
+.ahs-full-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #3b82f6;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.ahs-full-btn:hover { color: #1d4ed8; }
+.ahs-full-body {
+  margin-top: 0.875rem;
+  padding-top: 0.875rem;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.ahs-full-msg   { font-size: 0.83rem; color: #374151; line-height: 1.6; }
+.ahs-full-section-title { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b; margin-bottom: 0.3rem; }
+
+/* ============================================================
+   HEALTH PRIORITY VISUAL  (hpv-*)
+   ============================================================ */
+.hpv-list   { display: flex; flex-direction: column; gap: 0.6rem; }
+.hpv-item   { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 0.75rem 1rem; }
+.hpv-top    { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.4rem; }
+.hpv-rank   { font-size: 0.7rem; font-weight: 800; color: #94a3b8; min-width: 1.2rem; }
+.hpv-label  { font-size: 0.875rem; font-weight: 700; color: #1e293b; flex: 1; }
+.hpv-urgency {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+}
+.hpv-urgency-high   { background: #fee2e2; color: #b91c1c; }
+.hpv-urgency-medium { background: #fef9c3; color: #a16207; }
+.hpv-urgency-low    { background: #dcfce7; color: #15803d; }
+.hpv-bar-track {
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 0.35rem;
+}
+.hpv-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #3b82f6, #06b6d4);
+}
+.hpv-reason { font-size: 0.75rem; color: #64748b; line-height: 1.4; }
+
+/* ============================================================
+   CAUSAL CHAIN CARD  (causal-*)
+   ============================================================ */
+.causal-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  padding: 1.25rem;
+}
+.causal-chain { display: flex; flex-direction: column; align-items: flex-start; gap: 0; margin-bottom: 1rem; }
+.causal-step  {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.625rem;
+  padding: 0.5rem 0.875rem;
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: #1e293b;
+  width: 100%;
+}
+.causal-step-icon  { font-size: 1rem; flex-shrink: 0; }
+.causal-step-text  { flex: 1; }
+.causal-step-last  { background: linear-gradient(135deg, #1e40af, #3b82f6); color: #fff; border-color: transparent; }
+.causal-arrow {
+  align-self: flex-start;
+  margin-left: 1.25rem;
+  color: #94a3b8;
+  font-size: 0.85rem;
+  padding: 0.15rem 0;
+}
+.causal-benefits-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #3b82f6;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-bottom: 0.5rem;
+}
+.causal-benefits-btn:hover { color: #1d4ed8; }
+.causal-benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+.causal-benefit-col  { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.625rem; padding: 0.75rem; }
+.causal-benefit-head { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #64748b; margin-bottom: 0.35rem; }
+.causal-benefit-text { font-size: 0.78rem; color: #374151; line-height: 1.45; }
+.causal-ignore {
+  margin-top: 0.875rem;
+  padding: 0.75rem 1rem;
+  background: #fef9c3;
+  border: 1px solid #fde68a;
+  border-radius: 0.625rem;
+  font-size: 0.78rem;
+  color: #713f12;
+  line-height: 1.45;
+}
+.causal-ignore summary { font-weight: 700; cursor: pointer; margin-bottom: 0.2rem; }
+
+/* ============================================================
+   AI PERSONALIZATION JOURNEY  (apj-*)
+   ============================================================ */
+.apj-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  padding: 1.25rem;
+}
+.apj-header       { margin-bottom: 1rem; }
+.apj-eyebrow      { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 0.25rem; }
+.apj-title        { font-size: 1rem; font-weight: 700; color: #1e293b; }
+.apj-progress-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem; }
+.apj-progress-label { font-size: 0.78rem; color: #64748b; }
+.apj-progress-pct   { font-size: 0.78rem; font-weight: 700; color: #3b82f6; }
+.apj-track { height: 8px; background: #e2e8f0; border-radius: 999px; overflow: hidden; margin-bottom: 1rem; }
+.apj-fill  { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #3b82f6, #06b6d4); transition: width 0.6s ease; }
+.apj-levels { display: flex; flex-direction: column; gap: 0.5rem; }
+.apj-level  {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.875rem;
+  border-radius: 0.625rem;
+  border: 1px solid #e2e8f0;
+}
+.apj-level-reached  { background: #eff6ff; border-color: #bfdbfe; }
+.apj-level-current  { background: linear-gradient(135deg, #1e40af, #3b82f6); border-color: transparent; color: #fff; }
+.apj-level-future   { background: #f8fafc; border-color: #e2e8f0; opacity: 0.55; }
+.apj-level-icon { font-size: 1.1rem; flex-shrink: 0; }
+.apj-level-body { flex: 1; display: flex; flex-direction: column; gap: 0.1rem; }
+.apj-level-name { font-size: 0.83rem; font-weight: 700; }
+.apj-level-current .apj-level-name { color: #fff; }
+.apj-level-reached  .apj-level-name { color: #1e3a8a; }
+.apj-level-future   .apj-level-name { color: #64748b; }
+.apj-level-sub  { font-size: 0.72rem; }
+.apj-level-current .apj-level-sub { color: #bfdbfe; }
+.apj-level-reached  .apj-level-sub { color: #3b82f6; }
+.apj-level-future   .apj-level-sub { color: #94a3b8; }
+.apj-level-check { font-size: 0.85rem; }
+
+/* ============================================================
+   GAMIFIED OUTCOME TRACKER  (ot-*)
+   ============================================================ */
+.ot-subtitle {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-top: -0.25rem;
+  margin-bottom: 0.75rem;
+}
+.ot-points-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.75rem 0;
+}
+.ot-points-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 999px;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #1e40af;
+}
+.ot-points-chip-zero {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+  color: #94a3b8;
+}
+.ot-motivation {
+  background: linear-gradient(135deg, #fef9c3, #fef3c7);
+  border: 1px solid #fde68a;
+  border-radius: 0.625rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: #713f12;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+/* ============================================================
+   RESPONSIVE — new UX components
+   ============================================================ */
+@media (max-width: 600px) {
+  .tmh-hero    { padding: 1.125rem; border-radius: 1rem; }
+  .tmh-title   { font-size: 1.2rem; }
+  .gp-card     { flex-direction: column; align-items: flex-start; }
+  .ahs-columns { grid-template-columns: 1fr; }
+  .causal-benefits-grid { grid-template-columns: 1fr; }
+  .apj-levels  { gap: 0.4rem; }
+  .aps-card    { padding: 1rem; }
+  .cs-body     { padding: 0 0.875rem 1rem; }
+  .cs-toggle   { padding: 0.875rem 1rem; }
+}
