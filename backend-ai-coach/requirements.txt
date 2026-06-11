@@ -1,0 +1,24 @@
+# NurtureAI – Backend Dependencies
+# Install with: pip install -r requirements.txt
+
+# API framework
+fastapi==0.115.12
+uvicorn==0.34.0
+
+# AI
+openai==1.70.0
+
+# Database
+pymongo==4.12.0
+
+# PDF generation
+xhtml2pdf==0.2.17
+
+# Validation & config
+pydantic==2.11.2
+python-dotenv==1.1.0
+
+# Auth
+bcrypt==4.0.1
+python-jose[cryptography]==3.3.0
+python-multipart==0.0.20

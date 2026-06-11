@@ -1,0 +1,839 @@
+[
+  {
+    "id": "WO-R01",
+    "name": "Gentle Mobility Flow",
+    "day_type": "recovery",
+    "level": "Einsteiger",
+    "workout_type": "mobility",
+    "duration_min": 20,
+    "total_duration_minutes": 20,
+    "warmup_minutes": 2,
+    "main_training_minutes": 15,
+    "cooldown_minutes": 3,
+    "intensity": "low",
+    "intensity_level": 2,
+    "description": "Light mobility work to reduce tension and support tissue recovery.",
+    "exercises": [
+      {
+        "exercise_name": "Foam Rolling",
+        "sets": 1,
+        "reps_or_duration": "5 minutes",
+        "video_url": "https://mock.nurtureai.de/videos/WO-R01/foam-rolling",
+        "instructions": "Roll each major muscle group slowly, pausing 20-30s on tight spots.",
+        "common_mistakes": "Rolling too fast without pausing on tender areas."
+      },
+      {
+        "exercise_name": "Hip Circles",
+        "sets": 2,
+        "reps_or_duration": "10 reps each side",
+        "video_url": "https://mock.nurtureai.de/videos/WO-R01/hip-circles",
+        "instructions": "Stand with hands on hips, draw large circles with your pelvis in both directions.",
+        "common_mistakes": "Limiting range of motion — aim for the largest circles you can comfortably make."
+      },
+      {
+        "exercise_name": "Cat-Cow Stretch",
+        "sets": 2,
+        "reps_or_duration": "10 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-R01/cat-cow-stretch",
+        "instructions": "On all fours, alternate between arching your back up (cat) and dropping your belly (cow) with your breath.",
+        "common_mistakes": "Rushing the movement — let each rep be guided by a full inhale and exhale."
+      },
+      {
+        "exercise_name": "Child's Pose",
+        "sets": 3,
+        "reps_or_duration": "30 seconds",
+        "video_url": "https://mock.nurtureai.de/videos/WO-R01/childs-pose",
+        "instructions": "Kneel and stretch arms forward on the floor, sinking your hips back toward your heels.",
+        "common_mistakes": "Holding tension in the shoulders — let them fall heavy toward the ground."
+      },
+      {
+        "exercise_name": "Seated Spinal Twist",
+        "sets": 2,
+        "reps_or_duration": "30 seconds each side",
+        "video_url": "https://mock.nurtureai.de/videos/WO-R01/seated-spinal-twist",
+        "instructions": "Sit tall, cross one leg over, place opposite elbow on knee, and rotate gently toward the back leg.",
+        "common_mistakes": "Collapsing the spine — keep the torso tall before rotating."
+      }
+    ]
+  },
+  {
+    "id": "WO-R02",
+    "name": "Restorative Yoga",
+    "day_type": "recovery",
+    "level": "Fortgeschrittene",
+    "workout_type": "yoga",
+    "duration_min": 30,
+    "total_duration_minutes": 30,
+    "warmup_minutes": 3,
+    "main_training_minutes": 22,
+    "cooldown_minutes": 5,
+    "intensity": "low",
+    "intensity_level": 2,
+    "description": "Parasympathetic-activating yoga sequence for high-stress or sleep-deprived days.",
+    "exercises": [
+      {
+        "exercise_name": "Legs Up the Wall",
+        "sets": 1,
+        "reps_or_duration": "5 minutes",
+        "video_url": "https://mock.nurtureai.de/videos/WO-R02/legs-up-the-wall",
+        "instructions": "Lie on your back with legs resting vertically against a wall, arms relaxed by your sides.",
+        "common_mistakes": "Placing the hips too far from the wall — scoot your sit bones as close to the wall as comfortable."
+      },
+      {
+        "exercise_name": "Supine Spinal Twist",
+        "sets": 2,
+        "reps_or_duration": "1 minute each side",
+        "video_url": "https://mock.nurtureai.de/videos/WO-R02/supine-spinal-twist",
+        "instructions": "Lying on your back, draw one knee across the body and let it fall to the opposite side while extending the same-side arm out.",
+        "common_mistakes": "Lifting the opposite shoulder — keep both shoulders grounded throughout."
+      },
+      {
+        "exercise_name": "Supported Bridge Pose",
+        "sets": 3,
+        "reps_or_duration": "45 seconds",
+        "video_url": "https://mock.nurtureai.de/videos/WO-R02/supported-bridge",
+        "instructions": "Lie on your back, feet flat, lift hips and place a block or folded blanket under the sacrum.",
+        "common_mistakes": "Placing the block too high — support should feel passive, not strained."
+      },
+      {
+        "exercise_name": "Diaphragmatic Breathing",
+        "sets": 1,
+        "reps_or_duration": "5 minutes",
+        "video_url": "https://mock.nurtureai.de/videos/WO-R02/diaphragmatic-breathing",
+        "instructions": "Lie flat, place one hand on chest and one on belly, breathe so only the belly hand rises.",
+        "common_mistakes": "Breathing too shallowly into the chest — the belly should expand first on each inhale."
+      },
+      {
+        "exercise_name": "Savasana",
+        "sets": 1,
+        "reps_or_duration": "5 minutes",
+        "video_url": "https://mock.nurtureai.de/videos/WO-R02/savasana",
+        "instructions": "Lie completely flat, feet slightly apart, arms by your sides palms up, and let your body fully relax.",
+        "common_mistakes": "Staying mentally active — use a body scan to consciously release each muscle group."
+      }
+    ]
+  },
+  {
+    "id": "WO-R03",
+    "name": "Active Recovery Walk & Breathwork",
+    "day_type": "recovery",
+    "level": "Advanced",
+    "workout_type": "walking",
+    "duration_min": 25,
+    "total_duration_minutes": 25,
+    "warmup_minutes": 3,
+    "main_training_minutes": 18,
+    "cooldown_minutes": 4,
+    "intensity": "low",
+    "intensity_level": 2,
+    "description": "Low-intensity movement with nervous system regulation for elite athletes on recovery days.",
+    "exercises": [
+      {
+        "exercise_name": "Brisk Walk",
+        "sets": 1,
+        "reps_or_duration": "15 minutes",
+        "video_url": "https://mock.nurtureai.de/videos/WO-R03/brisk-walk",
+        "instructions": "Walk at a pace where you can hold a conversation but still feel slightly warm.",
+        "common_mistakes": "Walking too fast and turning it into cardio — keep your heart rate conversational."
+      },
+      {
+        "exercise_name": "Box Breathing",
+        "sets": 5,
+        "reps_or_duration": "4-4-4-4 count",
+        "video_url": "https://mock.nurtureai.de/videos/WO-R03/box-breathing",
+        "instructions": "Inhale 4 counts, hold 4, exhale 4, hold 4 — repeat for full nervous system regulation.",
+        "common_mistakes": "Straining to hold the breath — the counts should feel comfortable, not forced."
+      },
+      {
+        "exercise_name": "Hip Flexor Stretch",
+        "sets": 2,
+        "reps_or_duration": "45 seconds each side",
+        "video_url": "https://mock.nurtureai.de/videos/WO-R03/hip-flexor-stretch",
+        "instructions": "Kneel in a lunge, push hips forward and tuck the pelvis gently to feel a deep front-hip stretch.",
+        "common_mistakes": "Arching the lower back — tuck your pelvis to deepen the stretch without lumbar strain."
+      },
+      {
+        "exercise_name": "Thoracic Rotation",
+        "sets": 2,
+        "reps_or_duration": "10 reps each side",
+        "video_url": "https://mock.nurtureai.de/videos/WO-R03/thoracic-rotation",
+        "instructions": "Sit in a chair or on the floor, hands behind your head, rotate your upper back without moving your hips.",
+        "common_mistakes": "Rotating from the lower back — the movement should come from the mid-spine only."
+      },
+      {
+        "exercise_name": "Dead Hang",
+        "sets": 3,
+        "reps_or_duration": "20 seconds",
+        "video_url": "https://mock.nurtureai.de/videos/WO-R03/dead-hang",
+        "instructions": "Grip a pull-up bar, let your body hang completely relaxed to decompress the spine and stretch the lats.",
+        "common_mistakes": "Engaging the shoulders — let them rise toward the ears for full passive traction."
+      }
+    ]
+  },
+  {
+    "id": "WO-N01",
+    "name": "Full Body Circuit",
+    "day_type": "normal",
+    "level": "Einsteiger",
+    "workout_type": "circuit",
+    "duration_min": 35,
+    "total_duration_minutes": 35,
+    "warmup_minutes": 5,
+    "main_training_minutes": 25,
+    "cooldown_minutes": 5,
+    "intensity": "moderate",
+    "intensity_level": 3,
+    "description": "Balanced full-body circuit suitable for regular training days.",
+    "exercises": [
+      {
+        "exercise_name": "Bodyweight Squats",
+        "sets": 3,
+        "reps_or_duration": "12 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-N01/bodyweight-squats",
+        "instructions": "Feet shoulder-width apart, lower until thighs are parallel to the ground, drive through heels to stand.",
+        "common_mistakes": "Knees caving inward — push them out in line with your toes throughout."
+      },
+      {
+        "exercise_name": "Push-ups",
+        "sets": 3,
+        "reps_or_duration": "10 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-N01/push-ups",
+        "instructions": "Hands slightly wider than shoulders, lower chest to floor keeping elbows at 45°, press back up.",
+        "common_mistakes": "Sagging hips — keep your core braced so your body forms a straight line."
+      },
+      {
+        "exercise_name": "Reverse Lunges",
+        "sets": 3,
+        "reps_or_duration": "10 reps each leg",
+        "video_url": "https://mock.nurtureai.de/videos/WO-N01/reverse-lunges",
+        "instructions": "Step one foot back, lower the rear knee toward the floor, then drive off the front foot to return.",
+        "common_mistakes": "Letting the front knee travel past the toes — keep it stacked over the ankle."
+      },
+      {
+        "exercise_name": "Dumbbell Row",
+        "sets": 3,
+        "reps_or_duration": "12 reps each arm",
+        "video_url": "https://mock.nurtureai.de/videos/WO-N01/dumbbell-row",
+        "instructions": "Hinge forward, brace the core, pull the dumbbell to your hip keeping the elbow close to the body.",
+        "common_mistakes": "Rotating the torso to lift heavier — keep hips square and use only your back and arm."
+      },
+      {
+        "exercise_name": "Plank",
+        "sets": 3,
+        "reps_or_duration": "30 seconds",
+        "video_url": "https://mock.nurtureai.de/videos/WO-N01/plank",
+        "instructions": "Forearms on the floor, maintain a straight line from head to heels, breathing steadily.",
+        "common_mistakes": "Raising the hips too high or letting them sag — aim for a perfectly flat back."
+      },
+      {
+        "exercise_name": "Mountain Climbers",
+        "sets": 3,
+        "reps_or_duration": "20 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-N01/mountain-climbers",
+        "instructions": "In a push-up position, drive alternating knees toward your chest as fast as you can with control.",
+        "common_mistakes": "Bouncing the hips up and down — keep them level and stable throughout."
+      }
+    ]
+  },
+  {
+    "id": "WO-N02",
+    "name": "Push / Pull Split",
+    "day_type": "normal",
+    "level": "Fortgeschrittene",
+    "workout_type": "strength",
+    "duration_min": 55,
+    "total_duration_minutes": 55,
+    "warmup_minutes": 7,
+    "main_training_minutes": 42,
+    "cooldown_minutes": 6,
+    "intensity": "moderate",
+    "intensity_level": 3,
+    "description": "Classic push/pull split for consistent muscle stimulus on standard training days.",
+    "exercises": [
+      {
+        "exercise_name": "Bench Press",
+        "sets": 4,
+        "reps_or_duration": "10 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-N02/bench-press",
+        "instructions": "Grip just outside shoulder-width, lower bar to mid-chest with control, press back to lockout.",
+        "common_mistakes": "Flaring elbows to 90° — keep them at roughly 45-75° to protect the shoulder joint."
+      },
+      {
+        "exercise_name": "Barbell Row",
+        "sets": 4,
+        "reps_or_duration": "10 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-N02/barbell-row",
+        "instructions": "Hinge at the hips to roughly 45°, pull bar to lower chest leading with elbows, squeeze the back at the top.",
+        "common_mistakes": "Using momentum by jerking upright — keep the torso angle fixed throughout the set."
+      },
+      {
+        "exercise_name": "Overhead Press",
+        "sets": 3,
+        "reps_or_duration": "12 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-N02/overhead-press",
+        "instructions": "Stand with bar at collar-bone height, press directly overhead to full lockout, lower with control.",
+        "common_mistakes": "Hyperextending the lower back — brace your core and keep a neutral spine."
+      },
+      {
+        "exercise_name": "Pull-ups",
+        "sets": 3,
+        "reps_or_duration": "8 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-N02/pull-ups",
+        "instructions": "Dead hang, depress and retract the scapulae, pull chin over the bar leading with your elbows.",
+        "common_mistakes": "Kipping or swinging — use strict form to maximize lat activation."
+      },
+      {
+        "exercise_name": "Lateral Raises",
+        "sets": 3,
+        "reps_or_duration": "15 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-N02/lateral-raises",
+        "instructions": "Slight bend in the elbows, raise dumbbells to shoulder height leading with the pinkies, lower slowly.",
+        "common_mistakes": "Shrugging the traps — keep shoulders depressed and raise with the delts only."
+      },
+      {
+        "exercise_name": "Face Pulls",
+        "sets": 3,
+        "reps_or_duration": "15 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-N02/face-pulls",
+        "instructions": "Set the cable at face height, pull rope toward your nose with elbows high, externally rotating at the top.",
+        "common_mistakes": "Pulling too heavy — the rear delts are small; use a weight that allows full rotation."
+      },
+      {
+        "exercise_name": "Dips",
+        "sets": 3,
+        "reps_or_duration": "10 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-N02/dips",
+        "instructions": "Grip parallel bars, lower until upper arms are parallel to the floor, press back to full lockout.",
+        "common_mistakes": "Leaning too far forward — slight forward lean is fine, but avoid collapsing at the chest."
+      }
+    ]
+  },
+  {
+    "id": "WO-N03",
+    "name": "Upper / Lower Split",
+    "day_type": "normal",
+    "level": "Advanced",
+    "workout_type": "strength",
+    "duration_min": 60,
+    "total_duration_minutes": 60,
+    "warmup_minutes": 8,
+    "main_training_minutes": 45,
+    "cooldown_minutes": 7,
+    "intensity": "moderate-high",
+    "intensity_level": 4,
+    "description": "High-volume upper/lower session for advanced trainees maintaining consistent progress.",
+    "exercises": [
+      {
+        "exercise_name": "Deadlift",
+        "sets": 4,
+        "reps_or_duration": "6 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-N03/deadlift",
+        "instructions": "Hip-width stance, bar over mid-foot, neutral spine, drive through the floor and lock out hips and knees simultaneously.",
+        "common_mistakes": "Rounding the lower back — brace the core hard and maintain a long spine before the bar leaves the floor."
+      },
+      {
+        "exercise_name": "Weighted Pull-ups",
+        "sets": 4,
+        "reps_or_duration": "8 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-N03/weighted-pull-ups",
+        "instructions": "Attach a plate via a belt, use a full dead hang to start, pull chin cleanly over the bar with control.",
+        "common_mistakes": "Cutting the range of motion short — go to a full dead hang on every rep."
+      },
+      {
+        "exercise_name": "Barbell Row",
+        "sets": 4,
+        "reps_or_duration": "10 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-N03/barbell-row",
+        "instructions": "Controlled hinge, pull bar to the lower abdomen with a tight upper back, pause briefly at the top.",
+        "common_mistakes": "Jerking the weight — the eccentric (lowering) phase should take at least 2 seconds."
+      },
+      {
+        "exercise_name": "Leg Press",
+        "sets": 4,
+        "reps_or_duration": "12 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-N03/leg-press",
+        "instructions": "Feet shoulder-width on the platform, lower until knees reach 90°, press evenly through both feet.",
+        "common_mistakes": "Allowing the lower back to peel off the pad — stop the descent before that happens."
+      },
+      {
+        "exercise_name": "Romanian Deadlift",
+        "sets": 3,
+        "reps_or_duration": "10 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-N03/romanian-deadlift",
+        "instructions": "Hinge from the hips with a soft knee bend, lower bar along the thighs until you feel a hamstring stretch, then drive hips forward.",
+        "common_mistakes": "Bending the knees too much — this becomes a squat rather than a hip hinge."
+      },
+      {
+        "exercise_name": "Cable Row",
+        "sets": 3,
+        "reps_or_duration": "12 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-N03/cable-row",
+        "instructions": "Sit tall, pull the handle to the lower abdomen, squeeze the shoulder blades together, then fully extend with control.",
+        "common_mistakes": "Leaning back to initiate the pull — use only the arms and back, keeping the torso stable."
+      },
+      {
+        "exercise_name": "Leg Curl",
+        "sets": 3,
+        "reps_or_duration": "12 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-N03/leg-curl",
+        "instructions": "Lie prone on the machine, curl heels toward your glutes through a full range of motion, lower slowly.",
+        "common_mistakes": "Lifting the hips off the pad — keep them pressed down to isolate the hamstrings."
+      }
+    ]
+  },
+  {
+    "id": "WO-P01",
+    "name": "Power Activation Circuit",
+    "day_type": "performance",
+    "level": "Einsteiger",
+    "workout_type": "plyometric",
+    "duration_min": 40,
+    "total_duration_minutes": 40,
+    "warmup_minutes": 8,
+    "main_training_minutes": 27,
+    "cooldown_minutes": 5,
+    "intensity": "high",
+    "intensity_level": 4,
+    "description": "Plyometric activation session to maximize output on peak energy days.",
+    "exercises": [
+      {
+        "exercise_name": "Box Jumps",
+        "sets": 4,
+        "reps_or_duration": "8 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-P01/box-jumps",
+        "instructions": "Stand in front of the box, swing arms, jump with both feet, land softly with bent knees, step down carefully.",
+        "common_mistakes": "Landing with straight legs — always absorb the impact with a deep knee bend."
+      },
+      {
+        "exercise_name": "Explosive Push-ups",
+        "sets": 3,
+        "reps_or_duration": "10 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-P01/explosive-push-ups",
+        "instructions": "Lower to the floor, then press explosively enough for your hands to leave the ground briefly.",
+        "common_mistakes": "Not maintaining a rigid body position — a sagging core bleeds power."
+      },
+      {
+        "exercise_name": "Jump Squats",
+        "sets": 4,
+        "reps_or_duration": "10 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-P01/jump-squats",
+        "instructions": "Descend to a squat, then explode upward as high as possible, land softly and absorb into the next rep.",
+        "common_mistakes": "Landing with a stiff impact — let your ankles, knees, and hips all absorb the landing."
+      },
+      {
+        "exercise_name": "Sprint Intervals",
+        "sets": 6,
+        "reps_or_duration": "20 meters",
+        "video_url": "https://mock.nurtureai.de/videos/WO-P01/sprint-intervals",
+        "instructions": "Sprint at maximum effort for 20m, walk back to start for recovery, then repeat.",
+        "common_mistakes": "Not achieving true maximum effort — each sprint should feel all-out."
+      },
+      {
+        "exercise_name": "Medicine Ball Slam",
+        "sets": 3,
+        "reps_or_duration": "12 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-P01/medicine-ball-slam",
+        "instructions": "Raise the ball overhead, engage the core, and slam it into the ground as hard as possible, catching the bounce.",
+        "common_mistakes": "Slamming without a full overhead extension — start each rep with the ball fully raised."
+      },
+      {
+        "exercise_name": "Battle Ropes",
+        "sets": 3,
+        "reps_or_duration": "30 seconds",
+        "video_url": "https://mock.nurtureai.de/videos/WO-P01/battle-ropes",
+        "instructions": "Alternate arm waves as fast as possible while keeping a stable athletic stance throughout.",
+        "common_mistakes": "Losing core stability — keep the torso tall and avoid swaying side to side."
+      }
+    ]
+  },
+  {
+    "id": "WO-P02",
+    "name": "Heavy Compound Day",
+    "day_type": "performance",
+    "level": "Fortgeschrittene",
+    "workout_type": "strength",
+    "duration_min": 65,
+    "total_duration_minutes": 65,
+    "warmup_minutes": 10,
+    "main_training_minutes": 48,
+    "cooldown_minutes": 7,
+    "intensity": "high",
+    "intensity_level": 4,
+    "description": "Max-strength compound session reserved for high-performance windows.",
+    "exercises": [
+      {
+        "exercise_name": "Back Squat",
+        "sets": 5,
+        "reps_or_duration": "5 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-P02/back-squat",
+        "instructions": "Bar on upper traps, feet shoulder-width, descend until hip crease passes the knee, drive through the whole foot.",
+        "common_mistakes": "Caving knees on the ascent — cue yourself to push knees out against your elbows as you drive up."
+      },
+      {
+        "exercise_name": "Bench Press",
+        "sets": 5,
+        "reps_or_duration": "5 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-P02/bench-press",
+        "instructions": "Arch the upper back, feet flat, lower bar to the lower chest and drive through an even bar path.",
+        "common_mistakes": "Losing the upper back arch at the bottom — keep the scapulae retracted throughout."
+      },
+      {
+        "exercise_name": "Weighted Pull-ups",
+        "sets": 4,
+        "reps_or_duration": "6 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-P02/weighted-pull-ups",
+        "instructions": "Full dead hang to chin over bar, control the descent to maximize tension in the lats.",
+        "common_mistakes": "Using a partial range of motion to handle more weight — full range builds far more strength."
+      },
+      {
+        "exercise_name": "Overhead Press",
+        "sets": 4,
+        "reps_or_duration": "6 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-P02/overhead-press",
+        "instructions": "From a rack at collar-bone height, brace hard, press to full lockout and shrug the traps at the top.",
+        "common_mistakes": "Pressing in front of the head instead of straight up — the bar path should go directly overhead."
+      },
+      {
+        "exercise_name": "Power Clean",
+        "sets": 3,
+        "reps_or_duration": "5 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-P02/power-clean",
+        "instructions": "Pull bar from the floor, triple extend (ankle, knee, hip), shrug and pull under the bar to catch in a partial squat.",
+        "common_mistakes": "Pulling with the arms too early — the legs and hips provide the power; arms just guide."
+      },
+      {
+        "exercise_name": "Farmer's Carry",
+        "sets": 3,
+        "reps_or_duration": "40 meters",
+        "video_url": "https://mock.nurtureai.de/videos/WO-P02/farmers-carry",
+        "instructions": "Carry heavy dumbbells or kettlebells at your sides, walk briskly with tall posture and tight core.",
+        "common_mistakes": "Leaning to one side — use equal weight in both hands and keep the shoulders level."
+      }
+    ]
+  },
+  {
+    "id": "WO-P03",
+    "name": "Athletic Peak Performance",
+    "day_type": "performance",
+    "level": "Advanced",
+    "workout_type": "strength",
+    "duration_min": 75,
+    "total_duration_minutes": 75,
+    "warmup_minutes": 12,
+    "main_training_minutes": 55,
+    "cooldown_minutes": 8,
+    "intensity": "very high",
+    "intensity_level": 5,
+    "description": "Elite-level functional session for peak performance windows — full CNS activation.",
+    "exercises": [
+      {
+        "exercise_name": "Barbell Clean & Jerk",
+        "sets": 5,
+        "reps_or_duration": "3 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-P03/barbell-clean-and-jerk",
+        "instructions": "Pull bar from floor, receive in a front squat, stand, then split jerk overhead to full lockout.",
+        "common_mistakes": "Failing to get under the bar quickly enough — the pull is just to create vertical momentum."
+      },
+      {
+        "exercise_name": "Back Squat at 85%",
+        "sets": 5,
+        "reps_or_duration": "3 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-P03/back-squat-85",
+        "instructions": "Working at 85% of your 1RM, treat each set as a near-maximal effort with perfect form.",
+        "common_mistakes": "Grinding through technical breakdown — if form collapses, reduce the load."
+      },
+      {
+        "exercise_name": "Weighted Dips",
+        "sets": 4,
+        "reps_or_duration": "6 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-P03/weighted-dips",
+        "instructions": "Attach a heavy plate, perform full-range dips with controlled descent and explosive press.",
+        "common_mistakes": "Partial range of motion — the upper arm must reach parallel for a full rep."
+      },
+      {
+        "exercise_name": "Muscle-ups",
+        "sets": 3,
+        "reps_or_duration": "5 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-P03/muscle-ups",
+        "instructions": "From a dead hang, generate a powerful pull and transition your chest above the bar into a dip lockout.",
+        "common_mistakes": "Relying on a kip without developing the straight-bar strength — build strict pull strength first."
+      },
+      {
+        "exercise_name": "Sled Push",
+        "sets": 4,
+        "reps_or_duration": "20 meters",
+        "video_url": "https://mock.nurtureai.de/videos/WO-P03/sled-push",
+        "instructions": "Load the sled heavy, lean forward at 45°, drive with short powerful steps through the forefoot.",
+        "common_mistakes": "Standing too upright — a forward lean transfers your force into horizontal movement."
+      },
+      {
+        "exercise_name": "Farmer's Carry",
+        "sets": 4,
+        "reps_or_duration": "40 meters",
+        "video_url": "https://mock.nurtureai.de/videos/WO-P03/farmers-carry",
+        "instructions": "Use competition-level weights, walk as fast as possible while maintaining perfect posture.",
+        "common_mistakes": "Taking wide, waddling steps — keep feet close to the midline for efficiency."
+      },
+      {
+        "exercise_name": "Assault Bike Sprints",
+        "sets": 5,
+        "reps_or_duration": "20 seconds",
+        "video_url": "https://mock.nurtureai.de/videos/WO-P03/assault-bike-sprints",
+        "instructions": "Go all-out for 20 seconds pushing and pulling the handles and pedaling simultaneously.",
+        "common_mistakes": "Pacing yourself — true sprints should leave you unable to speak at the end."
+      }
+    ]
+  },
+  {
+    "id": "WO-C01",
+    "name": "Cycle Yoga & Restoration",
+    "day_type": "recovery",
+    "level": "Einsteiger",
+    "workout_type": "yoga",
+    "duration_min": 25,
+    "total_duration_minutes": 25,
+    "warmup_minutes": 3,
+    "main_training_minutes": 18,
+    "cooldown_minutes": 4,
+    "intensity": "very low",
+    "intensity_level": 1,
+    "description": "Gentle cycle-aware yoga sequence to support the body during menstruation or high-fatigue phases.",
+    "exercises": [
+      {
+        "exercise_name": "Supported Child's Pose",
+        "sets": 3,
+        "reps_or_duration": "1 minute",
+        "video_url": "https://mock.nurtureai.de/videos/WO-C01/supported-childs-pose",
+        "instructions": "Place a bolster or folded blanket under your torso, kneel and drape your body over it for full passive rest.",
+        "common_mistakes": "Tensing the arms or hands — let every part of the body go completely heavy."
+      },
+      {
+        "exercise_name": "Reclined Butterfly Pose",
+        "sets": 1,
+        "reps_or_duration": "3 minutes",
+        "video_url": "https://mock.nurtureai.de/videos/WO-C01/reclined-butterfly",
+        "instructions": "Lie on your back, bring the soles of the feet together, let knees fall open, arms relaxed by your sides.",
+        "common_mistakes": "Forcing the knees toward the floor — let gravity do the work over time."
+      },
+      {
+        "exercise_name": "Gentle Hip Circles",
+        "sets": 2,
+        "reps_or_duration": "10 reps each direction",
+        "video_url": "https://mock.nurtureai.de/videos/WO-C01/gentle-hip-circles",
+        "instructions": "Lying on your back, draw both knees to chest and circle them slowly in both directions.",
+        "common_mistakes": "Making the circles too large and straining the lower back — keep the movement small and controlled."
+      },
+      {
+        "exercise_name": "Supine Knee Hug",
+        "sets": 2,
+        "reps_or_duration": "30 seconds each side",
+        "video_url": "https://mock.nurtureai.de/videos/WO-C01/supine-knee-hug",
+        "instructions": "Draw one knee to the chest with both hands, keep the opposite leg extended flat on the floor.",
+        "common_mistakes": "Lifting the head and neck — keep the head grounded for full lower-back release."
+      },
+      {
+        "exercise_name": "Legs Up the Wall",
+        "sets": 1,
+        "reps_or_duration": "5 minutes",
+        "video_url": "https://mock.nurtureai.de/videos/WO-C01/legs-up-the-wall",
+        "instructions": "Scoot your hips to the wall, extend legs up, and let your body melt into the floor completely.",
+        "common_mistakes": "Having the hips too far from the wall — closer is better for venous return."
+      },
+      {
+        "exercise_name": "Body Scan Relaxation",
+        "sets": 1,
+        "reps_or_duration": "3 minutes",
+        "video_url": "https://mock.nurtureai.de/videos/WO-C01/body-scan-relaxation",
+        "instructions": "Lying flat, mentally travel from your feet to your head, consciously releasing tension in each area.",
+        "common_mistakes": "Rushing through areas that feel fine — spend extra time on any part that holds tension."
+      }
+    ]
+  },
+  {
+    "id": "WO-C02",
+    "name": "Light Strength — Follicular Phase",
+    "day_type": "normal",
+    "level": "Einsteiger",
+    "workout_type": "light_strength",
+    "duration_min": 40,
+    "total_duration_minutes": 40,
+    "warmup_minutes": 5,
+    "main_training_minutes": 30,
+    "cooldown_minutes": 5,
+    "intensity": "low",
+    "intensity_level": 2,
+    "description": "Progressive light-strength session to build momentum as follicular energy begins to rise.",
+    "exercises": [
+      {
+        "exercise_name": "Goblet Squat",
+        "sets": 3,
+        "reps_or_duration": "12 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-C02/goblet-squat",
+        "instructions": "Hold a dumbbell at chest height, feet shoulder-width, squat deep keeping your elbows inside your knees.",
+        "common_mistakes": "Letting the chest fall forward — the dumbbell acts as a counterbalance, so use it."
+      },
+      {
+        "exercise_name": "Dumbbell Bench Press",
+        "sets": 3,
+        "reps_or_duration": "12 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-C02/dumbbell-bench-press",
+        "instructions": "Lie on a bench, lower dumbbells to chest level with elbows at 45°, press back to full extension.",
+        "common_mistakes": "Touching the dumbbells at the top — keep slight tension in the chest throughout."
+      },
+      {
+        "exercise_name": "Seated Cable Row",
+        "sets": 3,
+        "reps_or_duration": "12 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-C02/seated-cable-row",
+        "instructions": "Sit tall at a low-cable, pull the handle to your lower abdomen, squeeze the shoulder blades at the end.",
+        "common_mistakes": "Leaning back excessively — use a slight backward lean but drive the movement from the back."
+      },
+      {
+        "exercise_name": "Dumbbell Lateral Raise",
+        "sets": 3,
+        "reps_or_duration": "12 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-C02/dumbbell-lateral-raise",
+        "instructions": "Raise light dumbbells to shoulder height with arms almost straight, lower with a 3-second count.",
+        "common_mistakes": "Using too much weight and turning it into a shrug — light weight with a slow negative is most effective."
+      },
+      {
+        "exercise_name": "Glute Bridge",
+        "sets": 3,
+        "reps_or_duration": "15 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-C02/glute-bridge",
+        "instructions": "Lie on your back, feet flat, drive hips toward the ceiling squeezing the glutes hard at the top.",
+        "common_mistakes": "Hyperextending the lower back — squeeze the glutes, don't push through the lower back."
+      },
+      {
+        "exercise_name": "Pallof Press",
+        "sets": 3,
+        "reps_or_duration": "10 reps each side",
+        "video_url": "https://mock.nurtureai.de/videos/WO-C02/pallof-press",
+        "instructions": "Stand side-on to a cable, hold the handle at chest, press it straight out and resist rotation, then return.",
+        "common_mistakes": "Rotating the torso toward the cable — the entire goal is to resist that rotation."
+      }
+    ]
+  },
+  {
+    "id": "WO-C03",
+    "name": "Moderate Strength — Luteal Phase",
+    "day_type": "normal",
+    "level": "Fortgeschrittene",
+    "workout_type": "strength",
+    "duration_min": 50,
+    "total_duration_minutes": 50,
+    "warmup_minutes": 7,
+    "main_training_minutes": 38,
+    "cooldown_minutes": 5,
+    "intensity": "moderate",
+    "intensity_level": 3,
+    "description": "Consistent moderate-intensity strength work that respects the elevated recovery demands of the luteal phase.",
+    "exercises": [
+      {
+        "exercise_name": "Romanian Deadlift",
+        "sets": 4,
+        "reps_or_duration": "10 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-C03/romanian-deadlift",
+        "instructions": "Push hips back, lower the bar along your thighs to mid-shin, keeping a long neutral spine throughout.",
+        "common_mistakes": "Bending the knees too much and losing the hip-hinge pattern — keep a soft, fixed knee bend."
+      },
+      {
+        "exercise_name": "Dumbbell Press",
+        "sets": 4,
+        "reps_or_duration": "10 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-C03/dumbbell-press",
+        "instructions": "Moderate weight, full range of motion, focus on the mind-muscle connection over heavy loading.",
+        "common_mistakes": "Rushing the reps — a deliberate tempo will produce better stimulus with less CNS demand."
+      },
+      {
+        "exercise_name": "Lat Pulldown",
+        "sets": 4,
+        "reps_or_duration": "10 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-C03/lat-pulldown",
+        "instructions": "Lean back slightly, pull the bar to the upper chest leading with elbows, control fully on the way up.",
+        "common_mistakes": "Pulling behind the neck — always pull to the front to protect the cervical spine."
+      },
+      {
+        "exercise_name": "Walking Lunges",
+        "sets": 3,
+        "reps_or_duration": "12 reps each leg",
+        "video_url": "https://mock.nurtureai.de/videos/WO-C03/walking-lunges",
+        "instructions": "Take a long step forward, lower the back knee to just above the floor, then bring the rear foot forward to step again.",
+        "common_mistakes": "Short stride length causing the front knee to travel too far over the toe."
+      },
+      {
+        "exercise_name": "Cable Row",
+        "sets": 3,
+        "reps_or_duration": "12 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-C03/cable-row",
+        "instructions": "Neutral-grip handle, pull to the navel with elbows close to the body, return with full arm extension.",
+        "common_mistakes": "Letting the shoulders round forward at full extension — keep the scapulae slightly set."
+      },
+      {
+        "exercise_name": "Plank with Hip Dip",
+        "sets": 3,
+        "reps_or_duration": "30 seconds",
+        "video_url": "https://mock.nurtureai.de/videos/WO-C03/plank-hip-dip",
+        "instructions": "In a forearm plank, slowly rotate hips to dip them toward each side alternately for oblique activation.",
+        "common_mistakes": "Moving too fast and using momentum — each dip should be slow and controlled."
+      }
+    ]
+  },
+  {
+    "id": "WO-C04",
+    "name": "Gentle Walk & Restore",
+    "day_type": "recovery",
+    "level": "Einsteiger",
+    "workout_type": "walking",
+    "duration_min": 20,
+    "total_duration_minutes": 20,
+    "warmup_minutes": 2,
+    "main_training_minutes": 15,
+    "cooldown_minutes": 3,
+    "intensity": "very low",
+    "intensity_level": 1,
+    "description": "A short restorative walk with gentle stretching — ideal for menstruation or any day requiring minimal loading.",
+    "exercises": [
+      {
+        "exercise_name": "Easy Walk",
+        "sets": 1,
+        "reps_or_duration": "10 minutes",
+        "video_url": "https://mock.nurtureai.de/videos/WO-C04/easy-walk",
+        "instructions": "Walk at a comfortable, unhurried pace in fresh air if possible, focusing on relaxed breathing.",
+        "common_mistakes": "Checking your phone — use this time to breathe and decompress mentally."
+      },
+      {
+        "exercise_name": "Standing Hip Flexor Stretch",
+        "sets": 2,
+        "reps_or_duration": "45 seconds each side",
+        "video_url": "https://mock.nurtureai.de/videos/WO-C04/hip-flexor-stretch",
+        "instructions": "Step one foot back into a lunge, tuck the pelvis gently, and feel the front of the rear hip open.",
+        "common_mistakes": "Arching the lower back — a slight posterior pelvic tilt deepens the stretch safely."
+      },
+      {
+        "exercise_name": "Lateral Leg Swing",
+        "sets": 2,
+        "reps_or_duration": "10 reps each leg",
+        "video_url": "https://mock.nurtureai.de/videos/WO-C04/lateral-leg-swing",
+        "instructions": "Hold a wall for balance, swing one leg side to side in a relaxed, pendulum motion to mobilize the hip.",
+        "common_mistakes": "Swinging too hard — the movement should be passive and controlled, not forced."
+      },
+      {
+        "exercise_name": "Standing Calf Raise",
+        "sets": 2,
+        "reps_or_duration": "15 reps",
+        "video_url": "https://mock.nurtureai.de/videos/WO-C04/standing-calf-raise",
+        "instructions": "Rise onto the balls of both feet, pause briefly at the top, lower slowly for full range of motion.",
+        "common_mistakes": "Bouncing at the bottom — pause briefly to eliminate elastic energy and increase time under tension."
+      },
+      {
+        "exercise_name": "Shoulder Rolls",
+        "sets": 1,
+        "reps_or_duration": "1 minute",
+        "video_url": "https://mock.nurtureai.de/videos/WO-C04/shoulder-rolls",
+        "instructions": "Roll both shoulders slowly backward in large circles, then reverse direction to release upper back tension.",
+        "common_mistakes": "Hunching forward — stand tall so the shoulders can roll through a full range."
+      }
+    ]
+  }
+]

@@ -1,0 +1,12 @@
+# Ignore environement files
+.env
+
+# Ignore generated PDFs 
+*.pyc
+
+# Ignore generated PDFs 
+*.pdf
+
+# ignore macOS system file
+.DS_Store
+
